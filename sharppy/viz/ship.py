@@ -33,16 +33,16 @@ class backgroundSHIP(QtWidgets.QFrame):
         self.font_ratio = 0.0512
         fsize1 = round(self.size().height() * self.font_ratio) + 2
         fsize2 = round(self.size().height() * self.font_ratio)
-        self.plot_font = QtGui.QFont('Helvetica', fsize1 )
-        self.box_font = QtGui.QFont('Helvetica', fsize2)
+        self.plot_font = QtGui.QFont('Arial', fsize1 )
+        self.box_font = QtGui.QFont('Arial', fsize2)
         self.plot_metrics = QtGui.QFontMetrics( self.plot_font )
         self.box_metrics = QtGui.QFontMetrics(self.box_font)
         if platform.system() == "Windows":
             fsize1 -= self.plot_metrics.descent()
             fsize2 -= self.box_metrics.descent()
 
-            self.plot_font = QtGui.QFont('Helvetica', fsize1 )
-            self.box_font = QtGui.QFont('Helvetica', fsize2)
+            self.plot_font = QtGui.QFont('Arial', fsize1 )
+            self.box_font = QtGui.QFont('Arial', fsize2)
             self.plot_metrics = QtGui.QFontMetrics( self.plot_font )
             self.box_metrics = QtGui.QFontMetrics(self.box_font)
         self.plot_height = self.plot_metrics.xHeight()# + self.textpad
@@ -96,7 +96,7 @@ class backgroundSHIP(QtWidgets.QFrame):
         spacing = self.bry / 6.
 
         ytick_fontsize = round(self.font_ratio * self.hgt)
-        y_ticks_font = QtGui.QFont('Helvetica', ytick_fontsize)
+        y_ticks_font = QtGui.QFont('Arial', ytick_fontsize)
         qp.setFont(y_ticks_font)
         ship_inset_data = inset_data.shipData()
         texts = ship_inset_data['ship_ytexts']
@@ -123,7 +123,7 @@ class backgroundSHIP(QtWidgets.QFrame):
         center = np.arange(spacing, self.brx, spacing)
         texts = ship_inset_data['ship_xtexts']
         ef = self.ship_to_pix(ef)
-        qp.setFont(QtGui.QFont('Helvetica', round(self.font_ratio * self.hgt)))
+        qp.setFont(QtGui.QFont('Arial', round(self.font_ratio * self.hgt)))
         for i in range(ef.shape[0]):
             # Set green pen to draw box and whisker plots 
             pen = QtGui.QPen(self.box_color, 2, QtCore.Qt.SolidLine)

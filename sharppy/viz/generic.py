@@ -26,7 +26,7 @@ class backgroundGeneric(QtWidgets.QFrame):
         self.backgroundColor = kwargs.get('background', BLACK)
         self.borderColor = kwargs.get('border', WHITE)
 
-        self.label_font = QtGui.QFont('Helvetica', 7)
+        self.label_font = QtGui.QFont('Arial', 7)
 
         self.xmin = 0; self.xmax = 100
         self.ymin = 0; self.ymax=100
@@ -130,7 +130,7 @@ class backgroundGeneric(QtWidgets.QFrame):
         qp.drawLine(self.brx, self.bry, self.tlx, self.bry)
         qp.drawLine(self.tlx, self.bry, self.tlx, self.tly)
 
-    def draw_text(self, x, y, text, fontsize=12, color=WHITE, linewidth=1, font="Helvetica"):
+    def draw_text(self, x, y, text, fontsize=12, color=WHITE, linewidth=1, font="Arial"):
         """
         Draw text on the widget.
         :return:

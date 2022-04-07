@@ -46,7 +46,7 @@ class backgroundText(QtWidgets.QFrame):
         fsize = np.floor(.06 * self.hgt)
         self.tpad = np.floor(.03 * self.hgt)
         ## set the font, get the metrics and height of the font
-        self.label_font = QtGui.QFont('Helvetica')
+        self.label_font = QtGui.QFont('Arial')
         self.label_font.setPixelSize(fsize)
         self.label_metrics = QtGui.QFontMetrics( self.label_font )
         self.label_height = self.label_metrics.xHeight() + self.tpad
@@ -128,7 +128,7 @@ class plotText(backgroundText):
         '''
         self.bg_color = QtGui.QColor('#000000')
         self.fg_color = QtGui.QColor('#ffffff')
-        self.pw_units = 'in'
+        self.pw_units = 'cm'
         self.temp_units = 'Fahrenheit'
 
         self.alert_colors = [

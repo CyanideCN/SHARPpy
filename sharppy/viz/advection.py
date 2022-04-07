@@ -31,12 +31,12 @@ class backgroundAdvection(QtWidgets.QFrame):
 
         self.font_ratio = 0.12
         fsize = round(self.size().width() * self.font_ratio) + 3
-        self.label_font = QtGui.QFont('Helvetica', fsize)
+        self.label_font = QtGui.QFont('Arial', fsize)
         self.label_metrics = QtGui.QFontMetrics(self.label_font)
         self.os_mod = 0
         if platform.system() == "Windows":
             self.os_mod = self.label_metrics.descent()
-            self.label_font = QtGui.QFont('Helvetica', fsize - self.os_mod)
+            self.label_font = QtGui.QFont('Arial', fsize - self.os_mod)
             self.label_metrics = QtGui.QFontMetrics(self.label_font)
 
         self.plotBitMap = QtGui.QPixmap(self.width(), self.height())

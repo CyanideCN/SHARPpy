@@ -39,7 +39,7 @@ class backgroundSpeed(QtWidgets.QFrame):
         
         self.font_ratio = 0.12#0512
         fsize = round(self.size().width() * self.font_ratio) + 2
-        self.label_font = QtGui.QFont('Helvetica', fsize)
+        self.label_font = QtGui.QFont('Arial', fsize)
         self.plotBitMap = QtGui.QPixmap(self.width(), self.height())
         self.plotBitMap.fill(QtGui.QColor(self.bg_color))
         self.plotBackground()
@@ -73,7 +73,7 @@ class backgroundSpeed(QtWidgets.QFrame):
         qp.setPen(pen)
 
         fsize = round(self.size().width() * self.font_ratio)
-        self.title_font = QtGui.QFont('Helvetica', fsize+1)
+        self.title_font = QtGui.QFont('Arial', fsize+1)
         qp.setFont(self.title_font)
         qp.drawText(self.tlx+2, self.tly+2, self.brx-self.tlx, 30,
                    QtCore.Qt.AlignTop | QtCore.Qt.AlignLeft | QtCore.Qt.TextWordWrap, "Wind Speed\n(" + self.wind_units + ")")

@@ -58,9 +58,9 @@ class backgroundAnalogues(QtWidgets.QFrame):
         self.tpad = np.floor(.03 * self.hgt)
 
         ## set various fonts
-        self.title_font = QtGui.QFont('Helvetica', fsize1)
-        self.plot_font = QtGui.QFont('Helvetica', fsize2)
-        self.match_font = QtGui.QFont('Helvetica', fsize3)
+        self.title_font = QtGui.QFont('Arial', fsize1)
+        self.plot_font = QtGui.QFont('Arial', fsize2)
+        self.match_font = QtGui.QFont('Arial', fsize3)
         ## get the metrics on the fonts. This is used to get their size.
         self.title_metrics = QtGui.QFontMetrics( self.title_font )
         self.plot_metrics = QtGui.QFontMetrics( self.plot_font )
@@ -73,9 +73,9 @@ class backgroundAnalogues(QtWidgets.QFrame):
             fsize2 -= self.plot_metrics.descent()
             fsize3 -= self.match_metrics.descent()
 
-            self.title_font = QtGui.QFont('Helvetica', fsize1)
-            self.plot_font = QtGui.QFont('Helvetica', fsize2)
-            self.match_font = QtGui.QFont('Helvetica', fsize3)
+            self.title_font = QtGui.QFont('Arial', fsize1)
+            self.plot_font = QtGui.QFont('Arial', fsize2)
+            self.match_font = QtGui.QFont('Arial', fsize3)
             ## get the metrics on the fonts. This is used to get their size.
             self.title_metrics = QtGui.QFontMetrics( self.title_font )
             self.plot_metrics = QtGui.QFontMetrics( self.plot_font )

@@ -42,8 +42,8 @@ class backgroundFire(QtWidgets.QFrame):
             fsize = 10
         font_ratio = fsize/self.hgt
         font_ratio = 0.0512
-        self.label_font = QtGui.QFont('Helvetica', round(font_ratio * self.hgt))
-        self.fosberg_font = QtGui.QFont('Helvetica', round(font_ratio * self.hgt) + 2)
+        self.label_font = QtGui.QFont('Arial', round(font_ratio * self.hgt))
+        self.fosberg_font = QtGui.QFont('Arial', round(font_ratio * self.hgt) + 2)
         self.label_metrics = QtGui.QFontMetrics( self.label_font )
         self.fosberg_metrics = QtGui.QFontMetrics( self.fosberg_font )
         self.label_height = self.label_metrics.xHeight() + self.tpad
@@ -364,7 +364,7 @@ class plotFire(backgroundFire):
         label = ['SFC RH = ' + tab.utils.INT2STR(self.sfc_rh) + '%', \
                 '0-1 km RH = ' + tab.utils.INT2STR(self.rh01km) + '%', \
                 'BL mean RH = ' + tab.utils.INT2STR(self.pblrh) + '%', \
-                'PW = ' + tab.utils.FLOAT2STR(self.pwat,2) + ' in']
+                'PW = ' + tab.utils.FLOAT2STR(self.pwat,2) + ' cm']
 
         y1 = self.start_data_y1 + 6
         for i in range(len(label)): 

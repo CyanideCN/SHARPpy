@@ -54,11 +54,11 @@ class backgroundHodo(QFrame):
             fsize = 7
         else:
             fsize = 9
-        self.label_font = QtGui.QFont('Helvetica', fsize + (self.hgt * 0.0045))
+        self.label_font = QtGui.QFont('Arial', fsize + (self.hgt * 0.0045))
         self.label_font.setBold(True)
-        self.critical_font = QtGui.QFont('Helvetica', fsize + 2 +  (self.hgt * 0.0045))
+        self.critical_font = QtGui.QFont('Arial', fsize + 2 +  (self.hgt * 0.0045))
         self.critical_font.setBold(True)
-        self.readout_font = QtGui.QFont('Helvetica', 11 +  (self.hgt * 0.0045))
+        self.readout_font = QtGui.QFont('Arial', 11 +  (self.hgt * 0.0045))
         self.readout_font.setBold(True)
         self.label_metrics = QtGui.QFontMetrics( self.label_font )
         self.critical_metrics = QtGui.QFontMetrics( self.critical_font )

@@ -34,8 +34,8 @@ class backgroundSTPEF(QtWidgets.QFrame):
         else:
             fsize = round(font_ratio * self.size().height() + 1)
         self.fsize = fsize 
-        self.plot_font = QtGui.QFont('Helvetica', fsize + 1)
-        self.box_font = QtGui.QFont('Helvetica', fsize)
+        self.plot_font = QtGui.QFont('Arial', fsize + 1)
+        self.box_font = QtGui.QFont('Arial', fsize)
         self.plot_metrics = QtGui.QFontMetrics( self.plot_font )
         self.box_metrics = QtGui.QFontMetrics(self.box_font)
         self.plot_height = self.plot_metrics.xHeight() + 5
@@ -96,7 +96,7 @@ class backgroundSTPEF(QtWidgets.QFrame):
         qp.drawText(rect1, QtCore.Qt.TextDontClip | QtCore.Qt.AlignCenter,
             'Conditional Tornado Probs based on STPC')
 
-        qp.setFont(QtGui.QFont('Helvetica', self.fsize-1))
+        qp.setFont(QtGui.QFont('Arial', self.fsize-1))
         color = QtGui.QColor(EF1_color)
         pen = QtGui.QPen(color, 2, QtCore.Qt.SolidLine)
         qp.setPen(pen)
@@ -128,7 +128,7 @@ class backgroundSTPEF(QtWidgets.QFrame):
         pen = QtGui.QPen(QtCore.Qt.blue, 1, QtCore.Qt.DashLine)
         qp.setPen(pen)
         ytick_fontsize = self.fsize
-        y_ticks_font = QtGui.QFont('Helvetica', ytick_fontsize)
+        y_ticks_font = QtGui.QFont('Arial', ytick_fontsize)
         qp.setFont(y_ticks_font)
         efstp_inset_data = inset_data.condSTPData()
         texts = efstp_inset_data['ytexts']
@@ -157,7 +157,7 @@ class backgroundSTPEF(QtWidgets.QFrame):
         texts = efstp_inset_data['xticks']
         
         # Draw the x tick marks
-        qp.setFont(QtGui.QFont('Helvetica', self.fsize - 2))
+        qp.setFont(QtGui.QFont('Arial', self.fsize - 2))
         for i in range(np.asarray(texts).shape[0]):
             color = QtGui.QColor('#000000')
             color.setAlpha(0)

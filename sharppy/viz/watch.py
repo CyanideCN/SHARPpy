@@ -34,8 +34,8 @@ class backgroundWatch(QtWidgets.QFrame):
             fsize = 12
         #fsize = 10
         self.font_ratio = 0.0512
-        self.title_font = QtGui.QFont('Helvetica', round(self.size().height() * self.font_ratio) + 5)
-        self.plot_font = QtGui.QFont('Helvetica', round(self.size().height() * self.font_ratio) + 4)
+        self.title_font = QtGui.QFont('Arial', round(self.size().height() * self.font_ratio))
+        self.plot_font = QtGui.QFont('Arial', round(self.size().height() * self.font_ratio) + 2)
         self.title_metrics = QtGui.QFontMetrics( self.title_font )
         self.plot_metrics = QtGui.QFontMetrics( self.plot_font )
         self.title_height = self.title_metrics.height()

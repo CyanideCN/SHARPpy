@@ -8,12 +8,9 @@ from sharppy.viz import plotSHIP, plotSTPEF, plotFire, plotVROT
 from qtpy.QtCore import *
 from qtpy.QtGui import *
 from qtpy.QtWidgets import *
-import sharppy.sharptab.profile as profile
 import sharppy.sharptab as tab
 import sharppy.io as io
 from sutils.config import Config
-from datetime import datetime, timedelta
-import numpy as np
 import platform
 from os.path import expanduser
 import os
@@ -150,7 +147,7 @@ class SPCWidget(QWidget):
                          "  border-color: " + fg_hex + ";"
                          "  margin: 0px;}")
 
-        self.brand = QLabel("SHARPpy v%s %s" % (__version__, __version_name__))
+        self.brand = QLabel('SHARPpy Modified by py')
         self.brand.setAlignment(Qt.AlignRight)
         self.brand.setStyleSheet("QFrame {"
                              "  background-color: " + bg_hex + ";"

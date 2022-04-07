@@ -37,7 +37,7 @@ class backgroundWinds(QtWidgets.QFrame):
         self.hmax = 16.; self.hmin = 0.
         self.smax = 80.; self.smin = 0.
         self.font_ratio = 0.0512
-        self.label_font = QtGui.QFont('Helvetica', round(self.size().height() * self.font_ratio))
+        self.label_font = QtGui.QFont('Arial', round(self.size().height() * self.font_ratio))
         ## initialize the QPixmap
         self.plotBitMap = QtGui.QPixmap(self.width(), self.height())
         self.plotBitMap.fill(self.bg_color)

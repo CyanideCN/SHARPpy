@@ -36,8 +36,8 @@ class backgroundENS(QtWidgets.QFrame):
             fsize = 11
         fsize = np.floor(.055 * self.size().height())
         self.fsize = fsize
-        self.plot_font = QtGui.QFont('Helvetica', fsize + 1)
-        self.box_font = QtGui.QFont('Helvetica', fsize)
+        self.plot_font = QtGui.QFont('Arial', fsize + 1)
+        self.box_font = QtGui.QFont('Arial', fsize)
         self.plot_metrics = QtGui.QFontMetrics( self.plot_font )
         self.box_metrics = QtGui.QFontMetrics(self.box_font)
         self.plot_height = self.plot_metrics.xHeight() + 5
@@ -102,7 +102,7 @@ class backgroundENS(QtWidgets.QFrame):
         pen = QtGui.QPen(QtCore.Qt.blue, 1, QtCore.Qt.DashLine)
         qp.setPen(pen)
         ytick_fontsize = self.fsize-1
-        y_ticks_font = QtGui.QFont('Helvetica', ytick_fontsize)
+        y_ticks_font = QtGui.QFont('Arial', ytick_fontsize)
         qp.setFont(y_ticks_font)
         efstp_inset_data = inset_data.condSTPData()
         #texts = efstp_inset_data['ytexts']
@@ -132,7 +132,7 @@ class backgroundENS(QtWidgets.QFrame):
         spacing = self.brx / 12
 
         # Draw the x tick marks
-        qp.setFont(QtGui.QFont('Helvetica', self.fsize-1))
+        qp.setFont(QtGui.QFont('Arial', self.fsize-1))
         for i in range(np.asarray(texts).shape[0]):
             pen = QtGui.QPen(QtGui.QColor("#0080FF"), 1, QtCore.Qt.DashLine)
             qp.setPen(pen)

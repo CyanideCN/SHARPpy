@@ -35,8 +35,8 @@ class backgroundVROT(QtWidgets.QFrame):
             fsize = 11
                 
         self.font_ratio = 0.0512
-        self.plot_font = QtGui.QFont('Helvetica', round(self.size().height() * self.font_ratio + 1))
-        self.label_font = QtGui.QFont('Helvetica', round(self.size().height() * self.font_ratio ))
+        self.plot_font = QtGui.QFont('Arial', round(self.size().height() * self.font_ratio + 1))
+        self.label_font = QtGui.QFont('Arial', round(self.size().height() * self.font_ratio ))
         self.plot_metrics = QtGui.QFontMetrics( self.plot_font )
         self.label_metrics = QtGui.QFontMetrics(self.label_font)
         self.plot_height = self.plot_metrics.xHeight() + 5
@@ -99,7 +99,7 @@ class backgroundVROT(QtWidgets.QFrame):
         qp.drawText(rect1, QtCore.Qt.TextDontClip | QtCore.Qt.AlignCenter,
             'Conditional EF-scale Probs based on Vrot')
 
-        qp.setFont(QtGui.QFont('Helvetica',  self.size().height() * self.font_ratio))
+        qp.setFont(QtGui.QFont('Arial',  self.size().height() * self.font_ratio))
         color = QtGui.QColor(self.EF01_color)
         pen = QtGui.QPen(color, 2, QtCore.Qt.SolidLine)
         qp.setPen(pen)
@@ -126,7 +126,7 @@ class backgroundVROT(QtWidgets.QFrame):
 
         # Plot all of the Y-ticks for the probabilities
         ytick_fontsize =  round(self.size().height() * self.font_ratio)
-        y_ticks_font = QtGui.QFont('Helvetica', ytick_fontsize)
+        y_ticks_font = QtGui.QFont('Arial', ytick_fontsize)
         qp.setFont(y_ticks_font)
         texts = self.vrot_inset_data['ytexts']
         spacing = self.bry / 10.
@@ -152,7 +152,7 @@ class backgroundVROT(QtWidgets.QFrame):
 
         # Draw the x tick marks
         
-        qp.setFont(QtGui.QFont('Helvetica', self.font_ratio * self.hgt ))
+        qp.setFont(QtGui.QFont('Arial', self.font_ratio * self.hgt ))
         for i in range(texts.shape[0]):
             color = QtGui.QColor(self.bg_color)
             color.setAlpha(0)

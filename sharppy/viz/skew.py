@@ -12,7 +12,7 @@ from qtpy.QtOpenGL import *
 from sutils.utils import total_seconds
 import logging
 
-from datetime import datetime, timedelta
+from datetime import datetime
 
 __all__ = ['backgroundSkewT', 'plotSkewT']
 
@@ -53,16 +53,17 @@ class backgroundSkewT(QWidget):
         else:
             fsize = 7
             fsizet = 14
-        self.title_font = QtGui.QFont('Helvetica', fsizet + (self.hgt * 0.006))
+        self.title_font = QtGui.QFont('Arial', fsizet + (self.hgt * 0.005))
         self.title_metrics = QtGui.QFontMetrics( self.title_font )
         #self.title_font.setBold(True)
-        self.title_height = self.title_metrics.xHeight() + 5 + (self.hgt * 0.003)
+        self.title_height = self.title_metrics.xHeight() + 4 + (self.hgt * 0.003)
 
-        self.label_font = QtGui.QFont('Helvetica', fsize + 2 + (self.hgt * 0.0045))
-        self.environment_trace_font = QtGui.QFont('Helvetica', 11 + (self.hgt * 0.0045))
-        self.in_plot_font = QtGui.QFont('Helvetica', fsize + (self.hgt * 0.0045))
-        self.esrh_font = QtGui.QFont('Helvetica', fsize + 2 + (self.hgt * 0.0045))
-        self.hght_font = QtGui.QFont('Helvetica', 9 + (self.hgt * 0.0045))
+        self.label_font = QtGui.QFont('Arial', fsize + (self.hgt * 0.0045))
+        self.environment_trace_font = QtGui.QFont('Arial', 6 + (self.hgt * 0.0045))
+        self.in_plot_font = QtGui.QFont('Arial', fsize + (self.hgt * 0.0045))
+        self.esrh_font = QtGui.QFont('Arial', fsize + (self.hgt * 0.0045))
+        #self.hght_font = QtGui.QFont('Arial', 9 + (self.hgt * 0.0045))
+        self.hght_font = self.label_font
 
         self.esrh_metrics = QtGui.QFontMetrics( self.esrh_font )
         self.esrh_height = self.esrh_metrics.xHeight() + 9 + (self.hgt * 0.0045)
@@ -521,11 +522,7 @@ class plotSkewT(backgroundSkewT):
 
         plot_title = loc + '   ' + datetime.strftime(date, "%Y%m%d/%H%M")
         if model == "Archive":
-            fhour_str = ""
-            if not prof_coll.getMeta('observed'):
-                fhour = int(total_seconds(date - prof_coll.getMeta('base_time')) / 3600)
-                fhour_str = " F%03d" % fhour
-            plot_title += "  (User Selected" + fhour_str + modified_str + ")"
+            pass
         elif model == "Analog":
             date = prof_coll.getAnalogDate()
             plot_title = loc + '   ' + datetime.strftime(date, "%Y%m%d/%H%M")
@@ -1081,7 +1078,7 @@ class plotSkewT(backgroundSkewT):
 
                 if self.wind_units == 'm/s':
                     ss = tab.utils.KTS2MS(ss)
-                drawBarb( qp, self.barbx, y, dd, vv, shemis=(prof.latitude < 0) )
+                drawBarb( qp, self.barbx, y, dd, ss, shemis=(prof.latitude < 0) )
                 i += 1
         else:
             pres = np.arange(prof.pres[prof.sfc], prof.pres[prof.top], -40)
@@ -1186,7 +1183,6 @@ class plotSkewT(backgroundSkewT):
         lclp = self.pcl.lclpres
         lfcp = self.pcl.lfcpres
         elp = self.pcl.elpres
-        lvls = [[self.pcl.p0c,self.pcl.hght0c, '0 C'], [self.pcl.pm20c, self.pcl.hghtm20c, '-20 C'],[self.pcl.pm30c, self.pcl.hghtm30c, '-30 C']] 
         qp.setFont(self.hght_font)
 
         # Plot LCL
@@ -1230,7 +1226,7 @@ class plotSkewT(backgroundSkewT):
                     qp.setPen(pen)
                     qp.drawLine(x[0], y, x[1], y)
                     rect3 = QtCore.QRectF(x[0], y-12, x[1] - x[0], 4) 
-                    qp.drawText(rect3, QtCore.Qt.TextDontClip | QtCore.Qt.AlignLeft, t + '=' + tab.utils.INT2STR(tab.utils.M2FT(h)) + '\'')
+                    qp.drawText(rect3, QtCore.Qt.TextDontClip | QtCore.Qt.AlignLeft, t + '=' + tab.utils.INT2STR(h) + 'm')
             except:
                 continue
 
@@ -1344,7 +1340,6 @@ class plotSkewT(backgroundSkewT):
         qp.setClipping(True)
         ptop = self.prof.etop; pbot = self.prof.ebottom
         len = 15
-        text_offset = 10
         if tab.utils.QC(ptop) and tab.utils.QC(pbot):
             x1 = self.tmpc_to_pix(-20, 1000)
             x2 = self.tmpc_to_pix(-33, 1000)
