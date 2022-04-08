@@ -448,12 +448,8 @@ class plotText(backgroundText):
         std_dev = [ u'(<3\u03C3)', u'(2-3\u03C3)', u'(1-2\u03C3)', '', u'(1-2\u03C3)', u'(2-3\u03C3)', u'(>3\u03C3)' ]
         color = self.pwat_colors[self.prof.pwv_flag + 3] 
         dist_string = std_dev[self.prof.pwv_flag + 3]
-        if self.pw_units == 'cm':
-            pw_display = tab.utils.IN2CM(self.pwat)
-            pw_display = tab.utils.FLOAT2STR( pw_display, 1 )
-        else:
-            pw_display = self.pwat
-            pw_display = tab.utils.FLOAT2STR( pw_display, 2 )
+        pw_display = tab.utils.IN2CM(self.pwat) * 10
+        pw_display = tab.utils.FLOAT2STR( pw_display, 1 )
 
         ## draw the first column of text using a loop, keeping the horizontal
         ## placement constant.
@@ -466,7 +462,7 @@ class plotText(backgroundText):
 
         colors = [color, self.fg_color, self.fg_color, self.fg_color, self.fg_color, self.fg_color]
         texts = ['PW = ', 'MeanW = ', 'LowRH = ', 'MidRH = ', 'DCAPE = ', 'DownT = ']
-        indices = [pw_display + self.pw_units + ' ' + dist_string, self.mean_mixr + 'g/kg', self.low_rh + '%', self.mid_rh + '%', self.dcape, drush_disp + t_units_disp]
+        indices = [pw_display + 'mm' + ' ' + dist_string, self.mean_mixr + 'g/kg', self.low_rh + '%', self.mid_rh + '%', self.dcape, drush_disp + t_units_disp]
         for text, index, c in zip(texts, indices, colors):
             rect = QtCore.QRect(rpad, y1, x1*4, self.label_height)
             pen = QtGui.QPen(c, 1, QtCore.Qt.SolidLine)

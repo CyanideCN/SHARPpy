@@ -44,7 +44,7 @@ class backgroundThetae(QtWidgets.QFrame):
         self.tmax = 360.; self.tmin = 300.
         ## do a DPI check for the font size
         self.font_ratio = 0.0512
-        self.label_font = QtGui.QFont('Arial', 8)
+        self.label_font = QtGui.QFont('Arial', 7)
         ## initialize the QPixmap
         self.plotBitMap = QtGui.QPixmap(self.width(), self.height())
         self.clear()
