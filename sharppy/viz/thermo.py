@@ -459,16 +459,10 @@ class plotText(backgroundText):
         ## placement constant.
         y1 = self.ylast + self.tpad
 
-        if self.temp_units == 'Fahrenheit':
-            t_units_disp = 'F'
-            drush_disp = tab.utils.INT2STR( self.drush )
-            convT_disp = tab.utils.INT2STR( self.convT )
-            maxT_disp = tab.utils.INT2STR( self.maxT )
-        elif self.temp_units == 'Celsius':
-            t_units_disp = 'C'
-            drush_disp = tab.utils.INT2STR( tab.thermo.ftoc(self.drush) )
-            convT_disp = tab.utils.INT2STR( tab.thermo.ftoc(self.convT) )
-            maxT_disp = tab.utils.INT2STR( tab.thermo.ftoc(self.maxT) )
+        t_units_disp = 'C'
+        drush_disp = tab.utils.INT2STR( tab.thermo.ftoc(self.drush) )
+        convT_disp = tab.utils.INT2STR( tab.thermo.ftoc(self.convT) )
+        maxT_disp = tab.utils.INT2STR( tab.thermo.ftoc(self.maxT) )
 
         colors = [color, self.fg_color, self.fg_color, self.fg_color, self.fg_color, self.fg_color]
         texts = ['PW = ', 'MeanW = ', 'LowRH = ', 'MidRH = ', 'DCAPE = ', 'DownT = ']

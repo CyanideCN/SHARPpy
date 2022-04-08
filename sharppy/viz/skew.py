@@ -30,7 +30,7 @@ class backgroundSkewT(QWidget):
         logging.debug("Initalizing the backgroundSkewT.")
 
         self.lpad = 30; self.rpad = 65
-        self.tpad = 20; self.bpad = 20
+        self.tpad = 25; self.bpad = 20
         self.tlx = self.rpad; self.tly = self.tpad
         self.wid = self.size().width() - self.rpad
         self.hgt = self.size().height() - self.bpad
@@ -396,7 +396,7 @@ class plotSkewT(backgroundSkewT):
         self.el_mkr_color = QtGui.QColor(kwargs.get('el_mkr_color', '#FF00FF'))
         self.sig_temp_level_color = QtGui.QColor('#0A63FF')
 
-        self.sfc_units = kwargs.get('sfc_units', 'Fahrenheit')
+        self.sfc_units = 'Celsius'
         self.wind_units = kwargs.get('wind_units', 'knots')
         self.use_left = False
         self.setMouseTracking(True)
@@ -649,7 +649,6 @@ class plotSkewT(backgroundSkewT):
         self.lfc_mkr_color = QtGui.QColor(kwargs['skew_lfc_mkr_color'])
         self.el_mkr_color = QtGui.QColor(kwargs['skew_el_mkr_color'])
 
-        self.sfc_units = kwargs['temp_units']
         self.wind_units = kwargs['wind_units']
 
         # READOUT VARIABLES NOT SURE WHY THIS WAS THROWING AN EXCEPTION

@@ -745,6 +745,11 @@ class SPCWidget(QWidget):
         self.setFocus()
         self.update()
 
+    def copyimage(self):
+        # https://github.com/SuperWinner50/SHARPpy
+        logging.debug("Copy an image of the SPCWindow to the clipboard.")
+        QApplication.clipboard().setPixmap(self.grab())
+
 class SPCWindow(QMainWindow):
     closed = Signal()
 
@@ -793,6 +798,10 @@ class SPCWindow(QMainWindow):
         saveimage = QAction("Save Image", self, shortcut=QKeySequence("Ctrl+S"))
         saveimage.triggered.connect(self.spc_widget.saveimage)
         filemenu.addAction(saveimage)
+    
+        copyimage = QAction("Copy Image", self, shortcut=QKeySequence("Ctrl+C"))
+        copyimage.triggered.connect(self.spc_widget.copyimage)
+        filemenu.addAction(copyimage)
 
         savetext = QAction("Save Text", self, shortcut=QKeySequence("Ctrl+Shift+S"))
         savetext.triggered.connect(self.spc_widget.savetext)

@@ -7,7 +7,7 @@ from sharppy.sharptab.constants import MISSING, TOL
 __all__ = ['INT2STR','FLOAT2STR','MS2KTS', 'KTS2MS', 'MS2MPH']
 __all__ += ['MPH2MS', 'MPH2KTS', 'KTS2MPH', 'M2FT', 'FT2M']
 __all__ += ['IN2CM', 'CM2IN']
-__all__ += ['vec2comp', 'comp2vec', 'mag', 'QC']
+__all__ += ['vec2comp', 'comp2vec', 'mag', 'QC', 'sr_rotate']
 
 def INT2STR(val):
     '''
@@ -393,4 +393,35 @@ def QC(val):
     if type(val) == type(ma.masked): return False
     return True
 
+def sr_rotate(u, v, r_u, r_v):
+    """
+    From https://github.com/SuperWinner50/SHARPpy
+    
+    Rotates u,v values to storm relative position
 
+    Parameters
+    ----------
+
+    u : number, array_like
+        U-component of vectors
+    v : number, array_like
+        V-component of vectors
+    r_u : number, float or int
+        U-component of the rotation vector
+    r_v : number, float or int
+        V-component of the rotation vector
+
+    Returns
+    -------
+    Rotated vectors
+    """
+
+    # I know someone can clean this up
+    deg = np.arctan2(r_u, r_v)
+    nu = u - r_u
+    nv = v - r_v
+
+    u = nu * np.cos(deg) - nv * np.sin(deg)
+    v = nu * np.sin(deg) + nv * np.cos(deg)
+
+    return u, v

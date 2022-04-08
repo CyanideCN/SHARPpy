@@ -37,7 +37,7 @@ class backgroundSlinky(QtWidgets.QFrame):
         else:
             fsize = 9
         self.font_ratio = 0.0512
-        self.title_font = QtGui.QFont('Arial', round(self.size().height() * self.font_ratio)+2)
+        self.title_font = QtGui.QFont('Arial', round(self.size().height() * self.font_ratio))
         self.plot_font = QtGui.QFont('Arial', round(self.size().height() * self.font_ratio))
         self.title_metrics = QtGui.QFontMetrics( self.title_font )
         self.plot_metrics = QtGui.QFontMetrics( self.plot_font )
