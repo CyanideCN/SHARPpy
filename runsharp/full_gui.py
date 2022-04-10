@@ -186,20 +186,22 @@ class Calendar(QCalendarWidget):
             self.setWeekdayTextFormat(day, txt_fmt)
 
     def paintCell(self, painter, rect, date):
-        QCalendarWidget.paintCell(self, painter, rect, date)
-        if date.toPython() > self.max_date or date.toPython() < self.min_date:
-            color = QColor('#808080')
-            color.setAlphaF(0.5)
-            painter.fillRect(rect, color)
+        #QCalendarWidget.paintCell(self, painter, rect, date)
+        #if date.toPython() > self.max_date or date.toPython() < self.min_date:
+        #    color = QColor('#808080')
+        #    color.setAlphaF(0.5)
+        #    painter.fillRect(rect, color)
+        pass
  
     def setLatestAvailable(self, dt_avail):
-        qdate_avail = QDate(dt_avail.year, dt_avail.month, dt_avail.day)
+        #qdate_avail = QDate(dt_avail.year, dt_avail.month, dt_avail.day)
         #self.setMaximumDate(qdate_avail)
-        self.max_date = qdate_avail.toPython()
+        #self.max_date = qdate_avail.toPython()
         #if self.selectedDate().toPython() > qdate_avail.toPython():
         ##    self.setSelectedDate(qdate_avail)
         #else:
-        self.setSelectedDate(self.selectedDate())
+        #self.setSelectedDate(self.selectedDate())
+        pass
 
     def setEarliestAvailable(self, dt_earliest):
         qdate_earliest = QDate(dt_earliest.year, dt_earliest.month, dt_earliest.day)
@@ -232,15 +234,16 @@ class Picker(QWidget):
         # set the default profile type to Observed
         self.model = "Observed"
         # this is the default model initialization time
-        self.all_times = sorted(self.data_sources[self.model].getAvailableTimes())
-        self.run = [t for t in self.all_times if t.hour in [0, 12]][-1]
+        #self.all_times = sorted(self.data_sources[self.model].getAvailableTimes())
+        #self.run = [t for t in self.all_times if t.hour in [0, 12]][-1]
 
-        urls = data_source.pingURLs(self.data_sources)
-        self.has_connection = any(urls.values())
+        #urls = data_source.pingURLs(self.data_sources)
+        #self.has_connection = any(urls.values())
+        self.has_connection = False
         self.strictQC = True
 
         # initialize the UI
-        self.__initUI()
+        #self.__initUI()
 
     def __initUI(self):
         """
@@ -884,9 +887,6 @@ class Main(QMainWindow):
 
         self.show()
         self.raise_()
-        #import time
-        #time.sleep(3)
-        #self.grab().save('./screenshot.png', 'png')
 
     def createMenuBar(self):
         """

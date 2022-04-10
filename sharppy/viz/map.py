@@ -3,9 +3,7 @@ import numpy as np
 import sharppy
 from qtpy import QtGui, QtCore, QtWidgets
 from qtpy.QtWidgets import *
-from datetime import datetime
 import sys, os
-import re
 
 class Mapper(object):
     data_dir = os.path.join(os.path.dirname(sharppy.__file__), 'databases', 'shapefiles')

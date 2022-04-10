@@ -30,7 +30,7 @@ class backgroundSkewT(QWidget):
         logging.debug("Initalizing the backgroundSkewT.")
 
         self.lpad = 30; self.rpad = 65
-        self.tpad = 25; self.bpad = 20
+        self.tpad = 20; self.bpad = 20
         self.tlx = self.rpad; self.tly = self.tpad
         self.wid = self.size().width() - self.rpad
         self.hgt = self.size().height() - self.bpad
@@ -49,10 +49,10 @@ class backgroundSkewT(QWidget):
         #self.bg_color=QColor('#000000')
         if self.physicalDpiX() > 75:
             fsize = 6 
-            fsizet = 10
+            fsizet = 9
         else:
             fsize = 7
-            fsizet = 14
+            fsizet = 13
         self.title_font = QtGui.QFont('Arial', fsizet + (self.hgt * 0.005))
         self.title_metrics = QtGui.QFontMetrics( self.title_font )
         #self.title_font.setBold(True)
