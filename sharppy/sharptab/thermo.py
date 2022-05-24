@@ -4,6 +4,7 @@ import numpy as np
 import numpy.ma as ma
 from sharppy.sharptab.utils import *
 from sharppy.sharptab.constants import *
+from sharppy.sharptab.optimize import wobf, satlift, vappres, mixratio
 
 __all__ = ['drylift', 'thalvl', 'lcltemp', 'theta', 'wobf']
 __all__ += ['satlift', 'wetlift', 'lifted', 'vappres', 'mixratio']
@@ -221,127 +222,6 @@ def temp_at_vappres(e):
     b = (1./T_o)
     return ktoc(np.power( (-1.) * ((1./a)*np.log(e/e_so) - b), -1))
 
-def wobf(t):
-    '''
-    Implementation of the Wobus Function for computing the moist adiabats.
-
-    .. caution::
-        The Wobus function has been found to have a slight
-        pressure dependency (Davies-Jones 2008).  This dependency
-        is not included in this implementation.  
-
-    Parameters
-    ----------
-    t : number, numpy array
-        Temperature (C)
-
-    Returns
-    -------
-    Correction to theta (C) for calculation of saturated potential temperature.
-
-    '''
-    t = t - 20
-    try:
-        # If t is a scalar
-        if t is np.ma.masked:
-            return t
-        if t <= 0:
-            npol = 1. + t * (-8.841660499999999e-3 + t * ( 1.4714143e-4 + t * (-9.671989000000001e-7 + t * (-3.2607217e-8 + t * (-3.8598073e-10)))))
-            npol = 15.13 / (np.power(npol,4))
-            return npol
-        else:
-            ppol = t * (4.9618922e-07 + t * (-6.1059365e-09 + t * (3.9401551e-11 + t * (-1.2588129e-13 + t * (1.6688280e-16)))))
-            ppol = 1 + t * (3.6182989e-03 + t * (-1.3603273e-05 + ppol))
-            ppol = (29.93 / np.power(ppol,4)) + (0.96 * t) - 14.8
-            return ppol
-    except ValueError:
-        # If t is an array
-        npol = 1. + t * (-8.841660499999999e-3 + t * ( 1.4714143e-4 + t * (-9.671989000000001e-7 + t * (-3.2607217e-8 + t * (-3.8598073e-10)))))
-        npol = 15.13 / (np.power(npol,4))
-        ppol = t * (4.9618922e-07 + t * (-6.1059365e-09 + t * (3.9401551e-11 + t * (-1.2588129e-13 + t * (1.6688280e-16)))))
-        ppol = 1 + t * (3.6182989e-03 + t * (-1.3603273e-05 + ppol))
-        ppol = (29.93 / np.power(ppol,4)) + (0.96 * t) - 14.8
-        correction = np.zeros(t.shape, dtype=np.float64)
-        correction[t <= 0] = npol[t <= 0]
-        correction[t > 0] = ppol[t > 0]
-        return correction
-
-
-
-def satlift(p, thetam, conv=0.1):
-    '''
-    Returns the temperature (C) of a saturated parcel (thm) when lifted to a
-    new pressure level (hPa)
-
-    .. caution::
-        Testing of the SHARPpy parcel lifting routines has revealed that the
-        convergence criteria used the SHARP version (and implemented here) may cause 
-        drifting the pseudoadiabat to occasionally "drift" when high-resolution 
-        radiosonde data is used.  While a stricter convergence criteria (e.g. 0.01) has shown
-        to resolve this problem, it creates a noticable departure from the SPC CAPE values and therefore
-        may decalibrate the other SHARPpy functions (e.g. SARS).
-
-    Parameters
-    ----------
-    p : number
-        Pressure to which parcel is raised (hPa)
-    thetam : number
-        Saturated Potential Temperature of parcel (C)
-    conv : number
-        Convergence criteria for satlift() (C)
-
-    Returns
-    -------
-    Temperature (C) of saturated parcel at new level
-
-    '''
-    try:
-        # If p and thetam are scalars
-        if np.fabs(p - 1000.) - 0.001 <= 0: 
-            return thetam
-        eor = 999
-        while np.fabs(eor) - conv > 0:
-            if eor == 999:                  # First Pass
-                pwrp = np.power((p / 1000.),ROCP)
-                t1 = (thetam + ZEROCNK) * pwrp - ZEROCNK
-                e1 = wobf(t1) - wobf(thetam)
-                rate = 1
-            else:                           # Successive Passes
-                rate = (t2 - t1) / (e2 - e1)
-                t1 = t2
-                e1 = e2
-            t2 = t1 - (e1 * rate)
-            e2 = (t2 + ZEROCNK) / pwrp - ZEROCNK
-            e2 += wobf(t2) - wobf(e2) - thetam
-            eor = e2 * rate
-        return t2 - eor
-    except ValueError:
-        # If p and thetam are arrays
-        short = np.fabs(p - 1000.) - 0.001 <= 0
-        lft = np.where(short, thetam, 0)
-        if np.all(short):
-            return lft
-
-        eor = 999
-        first_pass = True
-        while np.fabs(np.min(eor)) - conv > 0:
-            if first_pass:                  # First Pass
-                pwrp = np.power((p[~short] / 1000.),ROCP)
-                t1 = (thetam[~short] + ZEROCNK) * pwrp - ZEROCNK
-                e1 = wobf(t1) - wobf(thetam[~short])
-                rate = 1
-                first_pass = False
-            else:                           # Successive Passes
-                rate = (t2 - t1) / (e2 - e1)
-                t1 = t2
-                e1 = e2
-            t2 = t1 - (e1 * rate)
-            e2 = (t2 + ZEROCNK) / pwrp - ZEROCNK
-            e2 += wobf(t2) - wobf(e2) - thetam[~short]
-            eor = e2 * rate
-        lft[~short] = t2 - eor
-        return lft
-
 
 def wetlift(p, t, p2):
     '''
@@ -394,50 +274,6 @@ def lifted(p, t, td, lev):
     '''
     p2, t2 = drylift(p, t, td)
     return wetlift(p2, t2, lev)
-
-
-def vappres(t):
-    '''
-    Returns the vapor pressure of dry air at given temperature
-
-    Parameters
-    ------
-    t : number, numpy array
-        Temperature of the parcel (C)
-
-    Returns
-    -------
-    Vapor Pressure of dry air
-
-    '''
-    pol = t * (1.1112018e-17 + (t * -3.0994571e-20))
-    pol = t * (2.1874425e-13 + (t * (-1.789232e-15 + pol)))
-    pol = t * (4.3884180e-09 + (t * (-2.988388e-11 + pol)))
-    pol = t * (7.8736169e-05 + (t * (-6.111796e-07 + pol)))
-    pol = 0.99999683 + (t * (-9.082695e-03 + pol))
-    return 6.1078 / pol**8
-
-
-def mixratio(p, t):
-    '''
-    Returns the mixing ratio (g/kg) of a parcel
-
-    Parameters
-    ----------
-    p : number, numpy array
-        Pressure of the parcel (hPa)
-    t : number, numpy array
-        Temperature of the parcel (hPa)
-
-    Returns
-    -------
-    Mixing Ratio (g/kg) of the given parcel
-
-    '''
-    x = 0.02 * (t - 12.5 + (7500. / p))
-    wfw = 1. + (0.0000045 * p) + (0.0014 * x * x)
-    fwesw = wfw * vappres(t)
-    return 621.97 * (fwesw / (p - fwesw))
 
 
 def temp_at_mixrat(w, p):
