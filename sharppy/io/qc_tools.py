@@ -49,7 +49,7 @@ def numMasked(arr):
             the length of the unmasked array
 
     '''
-    return arr.count(), arr.shape[0]
+    return (~np.isnan(arr)).sum(), arr.shape[0]
 
 def areProfileArrayLengthEqual(prof):
     '''
@@ -69,9 +69,11 @@ def areProfileArrayLengthEqual(prof):
         None
 
     '''
-
-    if not (len(prof.pres) == len(prof.hght) == len(prof.tmpc) == len(prof.dwpc) ==\
-            len(prof.wdir) == len(prof.wspd) == len(prof.u) == len(prof.v) == len(prof.omeg)):
+    for l in [prof.pres , prof.hght , prof.tmpc , prof.dwpc ,
+            prof.wdir , prof.wspd , prof.u , prof.v , prof.omeg]:
+        pass
+    if not (prof.pres.size == prof.hght.size == prof.tmpc.size == prof.dwpc.size ==\
+            prof.wdir.size == prof.wspd.size == prof.u.size == prof.v.size == prof.omeg.size):
         raiseError("Arrays passed to the Profile object have unequal lengths.", DataQualityException)
  
 def isPRESValid(pres):

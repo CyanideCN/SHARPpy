@@ -1,7 +1,6 @@
 ''' Create the Sounding (Profile) Object '''
 from __future__ import division
 import numpy as np
-import numpy.ma as ma
 import getpass
 from datetime import datetime
 from sharppy.sharptab import utils, winds, params, interp, thermo, watch_type, fire
@@ -99,14 +98,14 @@ class Profile(object):
         ## set the missing variable
         self.missing = kwargs.get('missing', MISSING)
         self.profile = kwargs.get('profile')
-        self.latitude = kwargs.get('latitude', ma.masked)
+        self.latitude = kwargs.get('latitude', np.nan)
         self.strictQC = kwargs.get('strictQC', False)
 
         ## get the data and turn them into arrays
-        self.pres = ma.asanyarray(kwargs.get('pres'), dtype=float)
-        self.hght = ma.asanyarray(kwargs.get('hght'), dtype=float)
-        self.tmpc = ma.asanyarray(kwargs.get('tmpc'), dtype=float)
-        self.dwpc = ma.asanyarray(kwargs.get('dwpc'), dtype=float)
+        self.pres = np.asanyarray(kwargs.get('pres'), dtype=float)
+        self.hght = np.asanyarray(kwargs.get('hght'), dtype=float)
+        self.tmpc = np.asanyarray(kwargs.get('tmpc'), dtype=float)
+        self.dwpc = np.asanyarray(kwargs.get('dwpc'), dtype=float)
 
         assert self.pres.ndim == 1 and self.hght.ndim == 1 and self.tmpc.ndim == 1 and self.dwpc.ndim == 1,\
                "The dimensions of the pres, hght, tmpc, and dwpc arrays passed to the Profile object constructor are not all one dimensional."
@@ -121,8 +120,8 @@ class Profile(object):
             warnings.warn("The pressure values passed to the profile object are below 100 mb.  This may cause some the SHARPpy routines not to behave as expected.") 
 
         if 'wdir' in kwargs and 'wspd' in kwargs:
-            self.wdir = ma.asanyarray(kwargs.get('wdir'), dtype=float)
-            self.wspd = ma.asanyarray(kwargs.get('wspd'), dtype=float)
+            self.wdir = np.asanyarray(kwargs.get('wdir'), dtype=float)
+            self.wspd = np.asanyarray(kwargs.get('wspd'), dtype=float)
             assert len(self.wdir) == len(self.wspd) == len(self.pres), "The wdir and wspd arrays passed to the Profile constructor must have the same length as the pres array."
             assert self.wdir.ndim == 1 and self.wspd.ndim == 1, "The wdir and wspd arrays passed to the Profile constructor are not one dimensional."
             #self.u, self.v = utils.vec2comp(self.wdir, self.wspd)
@@ -131,8 +130,8 @@ class Profile(object):
 
         ## did the user provide the wind in u,v form?
         elif 'u' in kwargs and 'v' in kwargs:
-            self.u = ma.asanyarray(kwargs.get('u'), dtype=float)
-            self.v = ma.asanyarray(kwargs.get('v'), dtype=float)
+            self.u = np.asanyarray(kwargs.get('u'), dtype=float)
+            self.v = np.asanyarray(kwargs.get('v'), dtype=float)
             assert len(self.u) == len(self.v) == len(self.pres), "The u and v arrays passed to the Profile constructor must have the same length as the pres array."
             assert self.u.ndim == 1 and self.v.ndim == 1, "The wdir and wspd arrays passed to the Profile constructor are not one dimensional."
             #self.wdir, self.wspd = utils.comp2vec(self.u, self.v)
@@ -143,15 +142,15 @@ class Profile(object):
 
         ## check if any standard deviation data was supplied
         if 'tmp_stdev' in kwargs:
-            self.dew_stdev = ma.asanyarray(kwargs.get('dew_stdev'), dtype=float)
-            self.tmp_stdev = ma.asanyarray(kwargs.get('tmp_stdev'), dtype=float)
+            self.dew_stdev = np.asanyarray(kwargs.get('dew_stdev'), dtype=float)
+            self.tmp_stdev = np.asanyarray(kwargs.get('tmp_stdev'), dtype=float)
         else:
             self.dew_stdev = None
             self.tmp_stdev = None
 
         if kwargs.get('omeg', None) is not None:
             ## get the omega data and turn into arrays
-            self.omeg = ma.asanyarray(kwargs.get('omeg'))
+            self.omeg = np.asanyarray(kwargs.get('omeg'))
             assert len(self.omeg) == len(self.pres), "Length of omeg array passed to constructor is not the same length as the pres array."
             assert self.omeg.ndim == 1, "omeg array is not one dimensional."
             assert len(self.omeg) > 1, "omeg array length must have a length greater than 1."
@@ -289,51 +288,51 @@ class BasicProfile(Profile):
             
         '''
         super(BasicProfile, self).__init__(**kwargs)
-
         self.strictQC = kwargs.get('strictQC', True)
 
         ## did the user provide the wind in vector form?
         if self.wdir is not None:
-            self.wdir[self.wdir == self.missing] = ma.masked
-            self.wspd[self.wspd == self.missing] = ma.masked
-            self.wdir[self.wspd.mask] = ma.masked
-            self.wspd[self.wdir.mask] = ma.masked
+            self.wdir[self.wdir == self.missing] = np.nan
+            self.wspd[self.wspd == self.missing] = np.nan
+            self.wdir[np.isnan(self.wspd)] = np.nan
+            self.wspd[np.isnan(self.wdir)] = np.nan
             self.u, self.v = utils.vec2comp(self.wdir, self.wspd)
 
         ## did the user provide the wind in u,v form?
         elif self.u is not None:
-            self.u[self.u == self.missing] = ma.masked
-            self.v[self.v == self.missing] = ma.masked
-            self.u[self.v.mask] = ma.masked
-            self.v[self.u.mask] = ma.masked
+            self.u[self.u == self.missing] = np.nan
+            self.v[self.v == self.missing] = np.nan
+            self.u[np.isnan(self.v)] = np.nan
+            self.v[np.isnan(self.u)] = np.nan
             self.wdir, self.wspd = utils.comp2vec(self.u, self.v)
 
         ## check if any standard deviation data was supplied
         if self.tmp_stdev is not None:
-            self.dew_stdev[self.dew_stdev == self.missing] = ma.masked
-            self.tmp_stdev[self.tmp_stdev == self.missing] = ma.masked
+            self.dew_stdev[self.dew_stdev == self.missing] = np.nan
+            self.tmp_stdev[self.tmp_stdev == self.missing] = np.nan
             self.dew_stdev.set_fill_value(self.missing)
             self.tmp_stdev.set_fill_value(self.missing)
 
         if self.omeg is not None:
             ## get the omega data and turn into arrays
-            self.omeg[self.omeg == self.missing] = ma.masked
+            self.omeg[self.omeg == self.missing] = np.nan
         else:
-            self.omeg = ma.masked_all(len(self.hght))
-
+            self.omeg = np.zeros(len(self.hght))
+            self.omeg[:] = np.nan
+        print(self.u, self.v)
         # QC Checks on the arrays passed to the constructor.
         qc_tools.areProfileArrayLengthEqual(self)
        
         ## mask the missing values
-        self.pres[self.pres == self.missing] = ma.masked
-        self.hght[self.hght == self.missing] = ma.masked
-        self.tmpc[self.tmpc == self.missing] = ma.masked
-        self.dwpc[self.dwpc == self.missing] = ma.masked
+        self.pres[self.pres == self.missing] = np.nan
+        self.hght[self.hght == self.missing] = np.nan
+        self.tmpc[self.tmpc == self.missing] = np.nan
+        self.dwpc[self.dwpc == self.missing] = np.nan
 
         self.logp = np.log10(self.pres.copy())
         self.vtmp = thermo.virtemp( self.pres, self.tmpc, self.dwpc )
-        idx = np.ma.where(self.pres > 0)[0]
-        self.vtmp[self.dwpc.mask[idx]] = self.tmpc[self.dwpc.mask[idx]] # Masking any virtual temperature 
+        idx = np.where(self.pres > 0)[0]
+        self.vtmp[np.isnan(self.dwpc)[idx]] = self.tmpc[np.isnan(self.dwpc)[idx]] # Masking any virtual temperature 
 
         ## get the index of the top and bottom of the profile
         self.sfc = self.get_sfc()
@@ -368,7 +367,7 @@ class BasicProfile(Profile):
             Index of the surface
             
             '''
-        return np.where(~self.tmpc.mask)[0].min()
+        return np.where(~np.isnan(self.tmpc))[0].min()
     
     def get_top(self):
         '''
@@ -384,7 +383,7 @@ class BasicProfile(Profile):
             -------
             Index of the surface
             '''
-        return np.where(~self.tmpc.mask)[0].max()
+        return np.where(~np.isnan(self.tmpc))[0].max()
      
     def get_wvmr_profile(self):
         '''
@@ -402,8 +401,8 @@ class BasicProfile(Profile):
         #wvmr = ma.empty(self.pres.shape[0])
         #for i in range(len(self.v)):
         wvmr = thermo.mixratio( self.pres, self.dwpc )
-        wvmr[wvmr == self.missing] = ma.masked
-        wvmr.set_fill_value(self.missing)
+        wvmr[wvmr == self.missing] = np.nan
+        #wvmr.set_fill_value(self.missing)
         return wvmr
     
     def get_wetbulb_profile(self):
@@ -419,11 +418,10 @@ class BasicProfile(Profile):
             Array of wet bulb profile
             '''
         
-        wetbulb = ma.empty(self.pres.shape[0])
+        wetbulb = np.empty(self.pres.shape[0])
         for i in range(len(self.v)):
             wetbulb[i] = thermo.wetbulb( self.pres[i], self.tmpc[i], self.dwpc[i] )
-        wetbulb[wetbulb == self.missing] = ma.masked
-        wetbulb.set_fill_value(self.missing)
+        wetbulb[wetbulb == self.missing] = np.nan
         return wetbulb
     
     def get_theta_profile(self):
@@ -438,11 +436,10 @@ class BasicProfile(Profile):
             -------
             Array of theta profile
             '''
-        theta = ma.empty(self.pres.shape[0])
+        theta = np.empty(self.pres.shape[0])
         for i in range(len(self.v)):
             theta[i] = thermo.theta(self.pres[i], self.tmpc[i])
-        theta[theta == self.missing] = ma.masked
-        theta.set_fill_value(self.missing)
+        theta[theta == self.missing] = np.nan
         theta = thermo.ctok(theta)
         return theta
     
@@ -458,11 +455,10 @@ class BasicProfile(Profile):
             -------
             Array of theta-e profile
             '''
-        thetae = ma.empty(self.pres.shape[0])
+        thetae = np.empty(self.pres.shape[0])
         for i in range(len(self.v)):
             thetae[i] = thermo.ctok( thermo.thetae(self.pres[i], self.tmpc[i], self.dwpc[i]) )
-        thetae[thetae == self.missing] = ma.masked
-        thetae.set_fill_value(self.missing)
+        thetae[thetae == self.missing] = np.nan
         return thetae
 
     def get_rh_profile(self):
@@ -479,8 +475,7 @@ class BasicProfile(Profile):
         '''
 
         rh = thermo.relh(self.pres, self.tmpc, self.dwpc)
-        rh[rh == self.missing] = ma.masked
-        rh.set_fill_value(self.missing)
+        rh[rh == self.missing] = np.nan
         return rh
 
 
@@ -542,7 +537,7 @@ class ConvectiveProfile(BasicProfile):
         '''
         ## call the constructor for Profile
         super(ConvectiveProfile, self).__init__(**kwargs)
-        assert np.ma.max(self.pres) > 100, "ConvectiveProfile objects require that the minimum pressure passed in the data array is greater than 100 mb." 
+        assert np.nanmax(self.pres) > 100, "ConvectiveProfile objects require that the minimum pressure passed in the data array is greater than 100 mb." 
 
         self.user_srwind = None
 
@@ -641,7 +636,7 @@ class ConvectiveProfile(BasicProfile):
         self.meanwind01km = winds.mean_wind(self, pbot=pres_sfc, ptop=pres_1km)
         self.meanwindpbl = winds.mean_wind(self, pbot=pres_sfc, ptop=self.ppbl_top)
         self.pblmaxwind = winds.max_wind(self, lower=0, upper=self.pbl_h)
-        #self.pblmaxwind = [np.ma.masked, np.ma.masked]
+        #self.pblmaxwind = [np.np.nan, np.np.nan]
         mulplvals = params.DefineParcel(self, flag=3, pres=500)
         mupcl = params.cape(self, lplvals=mulplvals)
         self.bplus_fire = mupcl.bplus
@@ -725,8 +720,8 @@ class ConvectiveProfile(BasicProfile):
         self.ebottom, self.etop = params.effective_inflow_layer( self, mupcl=self.mupcl )
 
         ## if there was no effective inflow layer, set the values to masked
-        if self.etop is ma.masked or self.ebottom is ma.masked:
-            self.ebotm = ma.masked; self.etopm = ma.masked
+        if self.etop is np.nan or self.ebottom is np.nan:
+            self.ebotm = np.nan; self.etopm = np.nan
             self.effpcl = self.sfcpcl # Default to surface parcel, as in params.DefineProfile().
 
         ## otherwise, interpolate the heights given to above ground level
@@ -779,8 +774,8 @@ class ConvectiveProfile(BasicProfile):
         self.mean_8km = utils.comp2vec(*winds.mean_wind(self, pbot=sfc, ptop=p8km))
         self.mean_lcl_el = utils.comp2vec(*winds.mean_wind(self, pbot=self.mupcl.lclpres, ptop=self.mupcl.elpres))
         ## parameters that depend on the presence of an effective inflow layer
-        if self.etop is ma.masked or self.ebottom is ma.masked:
-            self.etopm = ma.masked; self.ebotm = ma.masked
+        if self.etop is np.nan or self.ebottom is np.nan:
+            self.etopm = np.nan; self.ebotm = np.nan
             self.bunkers = winds.non_parcel_bunkers_motion( self )
             if self.user_srwind is None:
                 self.user_srwind = self.bunkers
@@ -793,13 +788,13 @@ class ConvectiveProfile(BasicProfile):
 
             self.right_srw_eff = [MISSING, MISSING, MISSING]
             self.right_srw_ebw = [MISSING, MISSING, MISSING]
-            self.right_esrh = [ma.masked, ma.masked, ma.masked]
-            self.right_critical_angle = ma.masked
+            self.right_esrh = [np.nan, np.nan, np.nan]
+            self.right_critical_angle = np.nan
 
             self.left_srw_eff = [MISSING, MISSING, MISSING]
             self.left_srw_ebw = [MISSING, MISSING, MISSING]
-            self.left_esrh = [ma.masked, ma.masked, ma.masked]
-            self.left_critical_angle = ma.masked
+            self.left_esrh = [np.nan, np.nan, np.nan]
+            self.left_critical_angle = np.nan
         else:
             self.bunkers = params.bunkers_storm_motion(self, mupcl=self.mupcl, pbot=self.ebottom)
             if self.user_srwind is None:
@@ -959,7 +954,7 @@ class ConvectiveProfile(BasicProfile):
         self.left_stp_fixed = params.stp_fixed(self.sfcpcl.bplus, self.sfcpcl.lclhght, self.left_srh1km[0], utils.KTS2MS(wspd))
         self.sherbe = params.sherb(self, effective=True)
         
-        if self.etop is np.ma.masked or self.ebottom is np.ma.masked:
+        if self.etop == np.nan or self.ebottom == np.nan:
             self.right_scp = 0.0; self.left_scp = 0.0
             self.right_stp_cin = 0.0; self.left_stp_cin = 0.0
         else:
@@ -1109,8 +1104,8 @@ class ConvectiveProfile(BasicProfile):
         parcel = self.mupcl
         slinky = params.parcelTraj(self, parcel)
         if slinky == None:
-            self.slinky_traj = ma.masked
-            self.updraft_tilt = ma.masked
+            self.slinky_traj = np.nan
+            self.updraft_tilt = np.nan
         else:
             self.slinky_traj = slinky[0]
             self.updraft_tilt = slinky[1]

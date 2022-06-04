@@ -198,9 +198,9 @@ class DefineParcel(object):
             self.tmpc = prof.tmpc[prof.sfc]
             self.dwpc = prof.dwpc[prof.sfc]
         if utils.QC(pbot): self.pbot = pbot
-        else: self.pbot = ma.masked
+        else: self.pbot = np.nan
         if utils.QC(ptop): self.ptop = ptop
-        else: self.pbot = ma.masked
+        else: self.pbot = np.nan
 
 
 class Parcel(object):
@@ -312,50 +312,50 @@ class Parcel(object):
             Pressure at the buoyancy minimum (mb)
         '''
     def __init__(self, **kwargs):
-        self.pres = ma.masked # Parcel beginning pressure (mb)
-        self.tmpc = ma.masked # Parcel beginning temperature (C)
-        self.dwpc = ma.masked # Parcel beginning dewpoint (C)
-        self.ptrace = ma.masked # Parcel trace pressure (mb)
-        self.ttrace = ma.masked # Parcel trace temperature (C)
-        self.blayer = ma.masked # Pressure of the bottom of the layer the parcel is lifted (mb)
-        self.tlayer = ma.masked # Pressure of the top of the layer the parcel is lifted (mb)
+        self.pres = np.nan # Parcel beginning pressure (mb)
+        self.tmpc = np.nan # Parcel beginning temperature (C)
+        self.dwpc = np.nan # Parcel beginning dewpoint (C)
+        self.ptrace = np.nan # Parcel trace pressure (mb)
+        self.ttrace = np.nan # Parcel trace temperature (C)
+        self.blayer = np.nan # Pressure of the bottom of the layer the parcel is lifted (mb)
+        self.tlayer = np.nan # Pressure of the top of the layer the parcel is lifted (mb)
         self.entrain = 0. # A parcel entrainment setting (not yet implemented)
-        self.lclpres = ma.masked # Parcel LCL (lifted condensation level) pressure (mb)
-        self.lclhght = ma.masked # Parcel LCL height (m AGL)
-        self.lfcpres = ma.masked # Parcel LFC (level of free convection) pressure (mb)
-        self.lfchght = ma.masked # Parcel LFC height (m AGL)
-        self.elpres = ma.masked # Parcel EL (equilibrium level) pressure (mb)
-        self.elhght = ma.masked # Parcel EL height (m AGL)
-        self.mplpres = ma.masked # Maximum Parcel Level (mb)
-        self.mplhght = ma.masked # Maximum Parcel Level (m AGL)
-        self.bplus = ma.masked # Parcel CAPE (J/kg)
-        self.bminus = ma.masked # Parcel CIN (J/kg)
-        self.bfzl = ma.masked # Parcel CAPE up to freezing level (J/kg)
-        self.b3km = ma.masked # Parcel CAPE up to 3 km (J/kg)
-        self.b6km = ma.masked # Parcel CAPE up to 6 km (J/kg)
-        self.p0c = ma.masked # Pressure value at 0 C  (mb)
-        self.pm10c = ma.masked # Pressure value at -10 C (mb)
-        self.pm20c = ma.masked # Pressure value at -20 C (mb)
-        self.pm30c = ma.masked # Pressure value at -30 C (mb)
-        self.hght0c = ma.masked # Height value at 0 C (m AGL)
-        self.hghtm10c = ma.masked # Height value at -10 C (m AGL)
-        self.hghtm20c = ma.masked # Height value at -20 C (m AGL)
-        self.hghtm30c = ma.masked # Height value at -30 C (m AGL)
-        self.wm10c = ma.masked # w velocity at -10 C ?
-        self.wm20c = ma.masked # w velocity at -20 C ?
-        self.wm30c = ma.masked # Wet bulb at -30 C ? 
-        self.li5 = ma.masked # Lifted Index at 500 mb (C)
-        self.li3 = ma.masked # Lifted Index at 300 mb (C)
-        self.brnshear = ma.masked # Bulk Richardson Number Shear
-        self.brnu = ma.masked # Bulk Richardson Number U (kts)
-        self.brnv = ma.masked # Bulk Richardson Number V (kts)
-        self.brn = ma.masked # Bulk Richardson Number (unitless)
-        self.limax = ma.masked # Maximum Lifted Index (C)
-        self.limaxpres = ma.masked # Pressure at Maximum Lifted Index (mb)
-        self.cap = ma.masked # Cap Strength (C)
-        self.cappres = ma.masked # Cap strength pressure (mb)
-        self.bmin = ma.masked # Buoyancy minimum in profile (C)
-        self.bminpres = ma.masked # Buoyancy minimum pressure (mb)
+        self.lclpres = np.nan # Parcel LCL (lifted condensation level) pressure (mb)
+        self.lclhght = np.nan # Parcel LCL height (m AGL)
+        self.lfcpres = np.nan # Parcel LFC (level of free convection) pressure (mb)
+        self.lfchght = np.nan # Parcel LFC height (m AGL)
+        self.elpres = np.nan # Parcel EL (equilibrium level) pressure (mb)
+        self.elhght = np.nan # Parcel EL height (m AGL)
+        self.mplpres = np.nan # Maximum Parcel Level (mb)
+        self.mplhght = np.nan # Maximum Parcel Level (m AGL)
+        self.bplus = np.nan # Parcel CAPE (J/kg)
+        self.bminus = np.nan # Parcel CIN (J/kg)
+        self.bfzl = np.nan # Parcel CAPE up to freezing level (J/kg)
+        self.b3km = np.nan # Parcel CAPE up to 3 km (J/kg)
+        self.b6km = np.nan # Parcel CAPE up to 6 km (J/kg)
+        self.p0c = np.nan # Pressure value at 0 C  (mb)
+        self.pm10c = np.nan # Pressure value at -10 C (mb)
+        self.pm20c = np.nan # Pressure value at -20 C (mb)
+        self.pm30c = np.nan # Pressure value at -30 C (mb)
+        self.hght0c = np.nan # Height value at 0 C (m AGL)
+        self.hghtm10c = np.nan # Height value at -10 C (m AGL)
+        self.hghtm20c = np.nan # Height value at -20 C (m AGL)
+        self.hghtm30c = np.nan # Height value at -30 C (m AGL)
+        self.wm10c = np.nan # w velocity at -10 C ?
+        self.wm20c = np.nan # w velocity at -20 C ?
+        self.wm30c = np.nan # Wet bulb at -30 C ? 
+        self.li5 = np.nan # Lifted Index at 500 mb (C)
+        self.li3 = np.nan # Lifted Index at 300 mb (C)
+        self.brnshear = np.nan # Bulk Richardson Number Shear
+        self.brnu = np.nan # Bulk Richardson Number U (kts)
+        self.brnv = np.nan # Bulk Richardson Number V (kts)
+        self.brn = np.nan # Bulk Richardson Number (unitless)
+        self.limax = np.nan # Maximum Lifted Index (C)
+        self.limaxpres = np.nan # Pressure at Maximum Lifted Index (mb)
+        self.cap = np.nan # Cap Strength (C)
+        self.cappres = np.nan # Cap strength pressure (mb)
+        self.bmin = np.nan # Buoyancy minimum in profile (C)
+        self.bminpres = np.nan # Buoyancy minimum pressure (mb)
         for kw in kwargs: setattr(self, kw, kwargs.get(kw))
 
 def hgz(prof):
@@ -884,10 +884,10 @@ def inferred_temp_adv(prof, dp=-100, lat=35):
         pressure_bounds: array
             a 2D array indicating the top and bottom bounds of the temperature advection layers (mb)
     '''
-    if prof.wdir.count() == 0:
-        return ma.masked, ma.masked
-    if np.ma.max(prof.pres) <= 100:
-        return ma.masked, ma.masked
+    if np.isnan(prof.wdir).all():
+        return np.nan, np.nan
+    if np.nanmax(prof.pres) <= 100:
+        return np.nan, np.nan
 
     omega = (2. * np.pi) / (86164.)
        
@@ -977,12 +977,12 @@ def temp_lvl(prof, temp, wetbulb=False):
 
     if not np.any(difft <= 0) or not np.any(difft >= 0):
         # Temp doesn't occur anywhere; return masked
-        return ma.masked
+        return np.nan
     elif np.any(difft == 0):
         # Temp is one of the data points; don't bother interpolating
         return prof.pres[difft == 0][0]
 
-    mask = difft.mask | prof.logp.mask
+    mask = np.isnan(difft) | np.isnan(prof.logp)
 
     difft = difft[~mask]
     profile = profile[~mask]
@@ -1049,7 +1049,7 @@ def mean_relh(prof, pbot=None, ptop=None, dp=-1, exact=False):
     if not pbot: pbot = prof.pres[prof.sfc]
     if not ptop: ptop = prof.pres[prof.sfc] - 100.
     if not utils.QC(interp.temp(prof, pbot)): pbot = prof.pres[prof.sfc]
-    if not utils.QC(interp.temp(prof, ptop)): return ma.masked
+    if not utils.QC(interp.temp(prof, ptop)): return np.nan
     if exact:
         ind1 = np.where(pbot > prof.pres)[0].min()
         ind2 = np.where(ptop < prof.pres)[0].max()
@@ -1092,14 +1092,14 @@ def mean_omega(prof, pbot=None, ptop=None, dp=-1, exact=False):
         
         '''
     if hasattr(prof, 'omeg'): 
-        if prof.omeg.all() is np.ma.masked:
+        if prof.omeg.all() is np.nan:
             return prof.missing
     else:
         return prof.missing
     if not pbot: pbot = prof.pres[prof.sfc]
     if not ptop: ptop = prof.pres[prof.sfc] - 100.
     if not utils.QC(interp.omeg(prof, pbot)): pbot = prof.pres[prof.sfc]
-    if not utils.QC(interp.omeg(prof, ptop)): return ma.masked
+    if not utils.QC(interp.omeg(prof, ptop)): return np.nan
     if exact:
         # This condition of the if statement is not tested
         omeg = prof.omeg
@@ -1147,13 +1147,13 @@ def mean_mixratio(prof, pbot=None, ptop=None, dp=-1, exact=False):
     if not pbot: pbot = prof.pres[prof.sfc]
     if not ptop: ptop = prof.pres[prof.sfc] - 100.
     if not utils.QC(interp.temp(prof, pbot)): pbot = prof.pres[prof.sfc]
-    if not utils.QC(interp.temp(prof, ptop)): return ma.masked
+    if not utils.QC(interp.temp(prof, ptop)): return np.nan
     if exact:
         ind1 = np.where(pbot > prof.pres)[0].min()
         ind2 = np.where(ptop < prof.pres)[0].max()
         dwpt1 = interp.dwpt(prof, pbot)
         dwpt2 = interp.dwpt(prof, ptop)
-        mask = ~prof.dwpc.mask[ind1:ind2+1] * ~prof.pres.mask[ind1:ind2+1]
+        mask = ~np.isnan(prof.dwpc[ind1:ind2+1]) * ~np.isnan(prof.pres[ind1:ind2+1])
         dwpt = np.concatenate([[dwpt1], prof.dwpc[ind1:ind2+1][mask], prof.dwpc[ind1:ind2+1][mask], [dwpt2]])
         p = np.concatenate([[pbot], prof.pres[ind1:ind2+1][mask],prof.pres[ind1:ind2+1][mask], [ptop]])
         totd = dwpt.sum() / 2.
@@ -1195,7 +1195,7 @@ def mean_thetae(prof, pbot=None, ptop=None, dp=-1, exact=False):
     if not pbot: pbot = prof.pres[prof.sfc]
     if not ptop: ptop = prof.pres[prof.sfc] - 100.
     if not utils.QC(interp.temp(prof, pbot)): pbot = prof.pres[prof.sfc]
-    if not utils.QC(interp.temp(prof, ptop)): return ma.masked
+    if not utils.QC(interp.temp(prof, ptop)): return np.nan
     if exact:
         ind1 = np.where(pbot > prof.pres)[0].min()
         ind2 = np.where(ptop < prof.pres)[0].max()
@@ -1248,14 +1248,14 @@ def mean_theta(prof, pbot=None, ptop=None, dp=-1, exact=False):
     if not pbot: pbot = prof.pres[prof.sfc]
     if not ptop: ptop = prof.pres[prof.sfc] - 100.
     if not utils.QC(interp.temp(prof, pbot)): pbot = prof.pres[prof.sfc]
-    if not utils.QC(interp.temp(prof, ptop)): return ma.masked
+    if not utils.QC(interp.temp(prof, ptop)): return np.nan
     if exact:
         ind1 = np.where(pbot > prof.pres)[0].min()
         ind2 = np.where(ptop < prof.pres)[0].max()
         theta1 = thermo.theta(pbot, interp.temp(prof, pbot))
         theta2 = thermo.theta(ptop, interp.temp(prof, ptop))
         theta = thermo.theta(prof.pres[ind1:ind2+1],  prof.tmpc[ind1:ind2+1])
-        mask = ~theta.mask
+        mask = ~np.isnan(theta)
         theta = np.concatenate([[theta1], theta[mask], theta[mask], [theta2]])
         tott = theta.sum() / 2.
         num = float(len(theta)) / 2.
@@ -1290,7 +1290,7 @@ def lapse_rate(prof, lower, upper, pres=True):
         lapse rate (C/km) : number
         '''
     if pres:
-        if (prof.pres[-1] > upper): return ma.masked 
+        if (prof.pres[-1] > upper): return np.nan 
         p1 = lower
         p2 = upper
         z1 = interp.hght(prof, lower)
@@ -1362,7 +1362,7 @@ def most_unstable_level(prof, pbot=None, ptop=None, dp=-1, exact=False):
     if not pbot: pbot = prof.pres[prof.sfc]
     if not ptop: ptop = prof.pres[prof.sfc] - 400
     if not utils.QC(interp.temp(prof, pbot)): pbot = prof.pres[prof.sfc]
-    if not utils.QC(interp.temp(prof, ptop)): return ma.masked
+    if not utils.QC(interp.temp(prof, ptop)): return np.nan
     if exact:
         ind1 = np.where(pbot > prof.pres)[0].min()
         ind2 = np.where(ptop < prof.pres)[0].max()
@@ -1452,7 +1452,7 @@ def parcelTraj(prof, parcel, smu=None, smv=None):
 
     if parcel.bplus < 1e-3:
         # The parcel doesn't have any positively buoyant areas.
-        return np.ma.masked, np.nan
+        return np.nan, np.nan
 
     if not utils.QC(elhght):
         elhght = prof.hght[-1]
@@ -1549,7 +1549,7 @@ def cape(prof, pbot=None, ptop=None, dp=-1, new_lifter=False, trunc=False, **kwa
     flag = kwargs.get('flag', 5)
     pcl = Parcel(pbot=pbot, ptop=ptop)
     pcl.lplvals = kwargs.get('lplvals', DefineParcel(prof, flag))
-    if prof.pres.compressed().shape[0] < 1: return pcl
+    if prof.pres.size < 1: return pcl
     
     # Variables
     pres = kwargs.get('pres', pcl.lplvals.pres)
@@ -1577,7 +1577,7 @@ def cape(prof, pbot=None, ptop=None, dp=-1, new_lifter=False, trunc=False, **kwa
         pbot = pres
         pcl.blayer = pbot
 
-    if type(interp.vtmp(prof, pbot)) == type(ma.masked) or type(interp.vtmp(prof, ptop)) == type(ma.masked):
+    if type(interp.vtmp(prof, pbot)) == type(np.nan) or type(interp.vtmp(prof, ptop)) == type(np.nan):
         return pcl
 
     # Begin with the Mixing Layer
@@ -1775,7 +1775,7 @@ def parcelx(prof, pbot=None, ptop=None, dp=-1, **kwargs):
     flag = kwargs.get('flag', 5)
     pcl = Parcel(pbot=pbot, ptop=ptop)
     pcl.lplvals = kwargs.get('lplvals', DefineParcel(prof, flag))
-    if prof.pres.compressed().shape[0] < 1: return pcl
+    if prof.pres.size < 1: return pcl
     
     # Variables
     pres = kwargs.get('pres', pcl.lplvals.pres)
@@ -1807,7 +1807,7 @@ def parcelx(prof, pbot=None, ptop=None, dp=-1, **kwargs):
         pbot = pres
         pcl.blayer = pbot
 
-    #if type(interp.vtmp(prof, pbot)) == type(ma.masked) or type(interp.vtmp(prof, ptop)) == type(ma.masked):
+    #if type(interp.vtmp(prof, pbot)) == type(np.nan) or type(interp.vtmp(prof, ptop)) == type(np.nan):
     #    return pcl
 
     # Begin with the Mixing Layer
@@ -1819,7 +1819,7 @@ def parcelx(prof, pbot=None, ptop=None, dp=-1, **kwargs):
     
     # Lift parcel and return LCL pres (hPa) and LCL temp (C)
     pe2, tp2 = thermo.drylift(pres, tmpc, dwpc)
-    if type(pe2) == type(ma.masked) or np.isnan(pe2):
+    if type(pe2) == type(np.nan) or np.isnan(pe2):
         return pcl
     blupper = pe2
     h2 = interp.hght(prof, pe2)
@@ -1899,7 +1899,7 @@ def parcelx(prof, pbot=None, ptop=None, dp=-1, **kwargs):
     iter_ranges = np.arange(lptr, prof.pres.shape[0])
     ttraces = ma.zeros(len(iter_ranges))
     ptraces = ma.zeros(len(iter_ranges))
-    ttraces[:] = ptraces[:] = ma.masked
+    ttraces[:] = ptraces[:] = np.nan
     for i in iter_ranges:
         if not utils.QC(prof.tmpc[i]): continue
         pe2 = prof.pres[i]
@@ -2109,9 +2109,9 @@ def parcelx(prof, pbot=None, ptop=None, dp=-1, **kwargs):
                 # Found an LFC, store height/pres and reset EL/MPL
                 pcl.lfcpres = pe3
                 pcl.lfchght = interp.to_agl(prof, interp.hght(prof, pe3))
-                pcl.elpres = ma.masked
-                pcl.elhght = ma.masked
-                pcl.mplpres = ma.masked
+                pcl.elpres = np.nan
+                pcl.elhght = np.nan
+                pcl.mplpres = np.nan
             else:
                 while interp.vtmp(prof, pe3) > thermo.virtemp(pe3, thermo.wetlift(pe2, tp3, pe3), thermo.wetlift(pe2, tp3, pe3)) and pe3 > 0:
                     pe3 -= 5
@@ -2126,9 +2126,9 @@ def parcelx(prof, pbot=None, ptop=None, dp=-1, **kwargs):
                     pcl.cap = cap_strength
                     pcl.cappres = cap_strengthpres
 
-                    pcl.elpres = ma.masked
-                    pcl.elhght = ma.masked
-                    pcl.mplpres = ma.masked
+                    pcl.elpres = np.nan
+                    pcl.elhght = np.nan
+                    pcl.mplpres = np.nan
 
             # Hack to force LFC to be at least at the LCL
             if pcl.lfcpres >= pcl.lclpres:
@@ -2145,7 +2145,7 @@ def parcelx(prof, pbot=None, ptop=None, dp=-1, **kwargs):
                 pe3 -= 5
             pcl.elpres = pe3
             pcl.elhght = interp.to_agl(prof, interp.hght(prof, pcl.elpres))
-            pcl.mplpres = ma.masked
+            pcl.mplpres = np.nan
             pcl.limax = -li_max
             pcl.limaxpres = li_maxpres
         
@@ -2227,9 +2227,7 @@ def bulk_rich(prof, pcl):
         '''
 
     # Make sure parcel is initialized
-    if not utils.QC(pcl.lplvals):
-        pbot = ma.masked
-    elif pcl.lplvals.flag > 0 and pcl.lplvals.flag < 4:
+    if pcl.lplvals.flag > 0 and pcl.lplvals.flag < 4:
         ptop = interp.pres(prof, interp.to_msl(prof, 6000.))
         pbot = prof.pres[prof.sfc]
     else:
@@ -2237,16 +2235,16 @@ def bulk_rich(prof, pcl):
         try:
             pbot = interp.pres(prof, h0-500.)
         except:
-            pbot = ma.masked
+            pbot = np.nan
         if utils.QC(pbot): pbot = prof.pres[prof.sfc]
         h1 = interp.hght(prof, pbot)
         ptop = interp.pres(prof, h1+6000.)
     
     if not utils.QC(pbot) or not utils.QC(ptop):
-        pcl.brnshear = ma.masked
-        pcl.brn = ma.masked
-        pcl.brnu = ma.masked
-        pcl.brnv = ma.masked
+        pcl.brnshear = np.nan
+        pcl.brn = np.nan
+        pcl.brnu = np.nan
+        pcl.brnv = np.nan
         return pcl
     
     # Calculate the lowest 500m mean wind
@@ -2259,10 +2257,10 @@ def bulk_rich(prof, pcl):
     
     # Make sure CAPE and Shear are available
     if not utils.QC(pcl.bplus) or not utils.QC(mnlu) or not utils.QC(mnuu):
-        pcl.brnshear = ma.masked
-        pcl.brnu = ma.masked
-        pcl.brnv = ma.masked
-        pcl.brn = ma.masked
+        pcl.brnshear = np.nan
+        pcl.brnu = np.nan
+        pcl.brnv = np.nan
+        pcl.brn = np.nan
         return pcl
     
     # Calculate shear between levels
@@ -2311,8 +2309,8 @@ def effective_inflow_layer(prof, ecape=100, ecinh=-250, **kwargs):
             mupcl = cape(prof, lplvals=mulplvals)
     mucape   = mupcl.bplus
     mucinh = mupcl.bminus
-    pbot = ma.masked
-    ptop = ma.masked
+    pbot = np.nan
+    ptop = np.nan
     if mucape != 0:
         if mucape >= ecape and mucinh > ecinh:
             # Begin at surface and search upward for effective surface
@@ -2323,7 +2321,7 @@ def effective_inflow_layer(prof, ecape=100, ecinh=-250, **kwargs):
                     break
 
             if not utils.QC(pbot): 
-                return ma.masked, ma.masked
+                return np.nan, np.nan
 
             bptr = i
             # Keep searching upward for the effective top
@@ -2393,8 +2391,8 @@ def effective_inflow_layer_binary(prof, ecape=100, ecinh=-250, **kwargs):
             mupcl = cape(prof, lplvals=mulplvals)
     mucape = mupcl.bplus
     mucinh = mupcl.bminus
-    pbot = ma.masked
-    ptop = ma.masked
+    pbot = np.nan
+    ptop = np.nan
     if mucape >= ecape and mucinh > ecinh:
         istart = np.argmin(np.abs(mupcl.lplvals.pres - prof.pres))
         itop = np.argmin(np.abs(300 - prof.pres))
@@ -2500,16 +2498,16 @@ def convective_temp(prof, **kwargs):
     # Do a quick search to fine whether to continue. If you need to heat
     # up more than 25C, don't compute.
     pcl = cape(prof, flag=5, pres=pres, tmpc=tmpc+25., dwpc=dwpc, trunc=True)
-    if pcl.bplus == 0. or not utils.QC(pcl.bminus) or pcl.bminus < mincinh: return ma.masked
+    if pcl.bplus == 0. or not utils.QC(pcl.bminus) or pcl.bminus < mincinh: return np.nan
     excess = dwpc - tmpc
     if excess > 0: tmpc = tmpc + excess + 4.
     pcl = cape(prof, flag=5, pres=pres, tmpc=tmpc, dwpc=dwpc, trunc=True)
-    if pcl.bplus == 0. or not utils.QC(pcl.bminus): pcl.bminus = ma.masked
+    if pcl.bplus == 0. or not utils.QC(pcl.bminus): pcl.bminus = np.nan
     while not utils.QC(pcl.bminus) or pcl.bminus < mincinh:
         if pcl.bminus < -100: tmpc += 2.
         else: tmpc += 0.5
         pcl = cape(prof, flag=5, pres=pres, tmpc=tmpc, dwpc=dwpc, trunc=True)
-        if pcl.bplus == 0.: pcl.bminus = ma.masked
+        if pcl.bplus == 0.: pcl.bminus = np.nan
     return tmpc
 
 def tei(prof):
@@ -2725,13 +2723,13 @@ def mmp(prof, **kwargs):
     lowest_idx = np.where(agl_hght <= 1000)[0]
     highest_idx = np.where((agl_hght >= 6000) & (agl_hght < 10000))[0]
     if len(lowest_idx) == 0 or len(highest_idx) == 0:
-        return ma.masked
+        return np.nan
     possible_shears = np.empty((len(lowest_idx),len(highest_idx)))
     pbots = interp.pres(prof, prof.hght[lowest_idx])
     ptops = interp.pres(prof, prof.hght[highest_idx])
 
     if len(lowest_idx) == 0 or len(highest_idx) == 0:
-        return np.ma.masked
+        return np.nan
 
     for b in range(len(pbots)):
         for t in range(len(ptops)):
@@ -2881,8 +2879,8 @@ def dcape(prof):
     sfc_pres = prof.pres[prof.sfc]
     prof_thetae = prof.thetae
     prof_wetbulb = prof.wetbulb
-    mask1 = prof_thetae.mask
-    mask2 = prof.pres.mask
+    mask1 = np.isnan(prof_thetae)
+    mask2 = np.isnan(prof.pres)
     mask = np.maximum( mask1, mask2 )
     prof_thetae = prof_thetae[~mask]
     prof_wetbulb = prof_wetbulb[~mask]
@@ -2922,7 +2920,7 @@ def dcape(prof):
     iter_ranges = range(uptr, -1, -1)
     ttraces = ma.zeros(len(iter_ranges))
     ptraces = ma.zeros(len(iter_ranges))
-    ttraces[:] = ptraces[:] = ma.masked
+    ttraces[:] = ptraces[:] = np.nan
     for i in iter_ranges:
         pe2 = pres[i]
         te2 = tmpc[i]
@@ -2945,7 +2943,7 @@ def dcape(prof):
         tp1 = tp2
     drtemp = tp2 # Downrush temp in Celsius
 
-    return tote, ma.concatenate((ttrace, ttraces[::-1])), ma.concatenate((ptrace, ptraces[::-1]))
+    return tote, np.concatenate((ttrace, ttraces[::-1])), np.concatenate((ptrace, ptraces[::-1]))
 
 def precip_eff(prof, **kwargs):
     '''
@@ -3207,7 +3205,7 @@ def mburst(prof):
     if mburst < 0:
         mburst = 0
     if np.isnan(mburst):
-        mburst = np.ma.masked
+        mburst = np.nan
 
     return mburst
 
@@ -3371,7 +3369,7 @@ def bore_lift(prof, hbot=0., htop=3000., pbot=None, ptop=None):
         layer_idxs = np.where( ( prof.hght[mask] >= hbot ) & ( prof.hght[mask] <= htop ) )[0]
 
     delta_lfc = np.zeros((len(layer_idxs)))
-    delta_lfc[:] = np.ma.masked
+    delta_lfc[:] = np.nan
 
     i = 0
     for idx in layer_idxs:

@@ -1,7 +1,6 @@
 ''' Wind Manipulation Routines '''
 from __future__ import division
 import numpy as np
-import numpy.ma as ma
 from sharppy.sharptab import interp, utils
 from sharppy.sharptab.constants import *
 import warnings
@@ -43,14 +42,14 @@ def mean_wind(prof, pbot=850, ptop=250, dp=-1, stu=0, stv=0):
     '''
     if dp > 0: dp = -dp
     if not utils.QC(pbot) or not utils.QC(ptop):
-        return ma.masked, ma.masked
-    if prof.wdir.count() == 0:
-        return ma.masked, ma.masked
+        return np.nan, np.nan
+    if np.isnan(prof.wdir).all():
+        return np.nan, np.nan
 
     ps = np.arange(pbot, ptop+dp, dp)
     u, v = interp.components(prof, ps)
     # u -= stu; v -= stv
-    return ma.average(u, weights=ps)-stu, ma.average(v, weights=ps)-stv
+    return np.average(u, weights=ps)-stu, np.average(v, weights=ps)-stv
 
 
 def mean_wind_npw(prof, pbot=850., ptop=250., dp=-1, stu=0, stv=0):
@@ -81,8 +80,8 @@ def mean_wind_npw(prof, pbot=850., ptop=250., dp=-1, stu=0, stv=0):
         V-component (kts)
 
     '''
-    if prof.wdir.count() == 0 or not utils.QC(ptop) or not utils.QC(pbot):
-        return ma.masked, ma.masked
+    if np.isnan(prof.wdir).all() or not utils.QC(ptop) or not utils.QC(pbot):
+        return np.nan, np.nan
 
     if dp > 0: dp = -dp
     ps = np.arange(pbot, ptop+dp, dp)
@@ -176,8 +175,8 @@ def wind_shear(prof, pbot=850, ptop=250):
         V-component (kts)
 
     '''
-    if prof.wdir.count() == 0 or not utils.QC(ptop) or not utils.QC(pbot):
-        return ma.masked, ma.masked
+    if np.isnan(prof.wdir).all() or not utils.QC(ptop) or not utils.QC(pbot):
+        return np.nan, np.nan
 
     ubot, vbot = interp.components(prof, pbot)
     utop, vtop = interp.components(prof, ptop)
@@ -206,8 +205,8 @@ def non_parcel_bunkers_motion_experimental(prof):
             Left Storm Motion V-component (kts)
         
         '''
-    if prof.wdir.count() == 0:
-        return ma.masked, ma.masked, ma.masked, ma.masked
+    if np.isnan(prof.wdir).all():
+        return np.nan, np.nan, np.nan, np.nan
 
     d = utils.MS2KTS(7.5)     # Deviation value emperically derived as 7.5 m/s
     ## get the msl height of 500m, 5.5km, and 6.0km above the surface
@@ -265,8 +264,8 @@ def non_parcel_bunkers_motion(prof):
         Left Storm Motion V-component (kts)
 
     '''
-    if prof.wdir.count() == 0:
-        return ma.masked, ma.masked, ma.masked, ma.masked
+    if np.isnan(prof.wdir).all():
+        return np.nan, np.nan, np.nan, np.nan
 
     d = utils.MS2KTS(7.5)     # Deviation value emperically derived as 7.5 m/s
     msl6km = interp.to_msl(prof, 6000.)
@@ -320,24 +319,23 @@ def helicity(prof, lower, upper, stu=0, stv=0, dp=-1, exact=True):
         Negative Helicity (m2/s2)
 
     '''
-    if prof.wdir.count() == 0 or not utils.QC(lower) or not utils.QC(upper) or not utils.QC(stu) or not utils.QC(stv):
-        return ma.masked, ma.masked, ma.masked
+    if np.isnan(prof.wdir).all() or not utils.QC(lower) or not utils.QC(upper) or not utils.QC(stu) or not utils.QC(stv):
+        return np.nan, np.nan, np.nan
 
     if lower != upper:
         lower = interp.to_msl(prof, lower)
         upper = interp.to_msl(prof, upper)
         plower = interp.pres(prof, lower)
         pupper = interp.pres(prof, upper)
-        if np.isnan(plower) or np.isnan(pupper) or \
-            type(plower) == type(ma.masked) or type(pupper) == type(ma.masked):
-            return np.ma.masked, np.ma.masked, np.ma.masked
+        if np.isnan(plower) or np.isnan(pupper):
+            return np.nan, np.nan, np.nan
         if exact:
             ind1 = np.where(plower >= prof.pres)[0].min()
             ind2 = np.where(pupper <= prof.pres)[0].max()
             u1, v1 = interp.components(prof, plower)
             u2, v2 = interp.components(prof, pupper)
-            u = np.concatenate([[u1], prof.u[ind1:ind2+1].compressed(), [u2]])
-            v = np.concatenate([[v1], prof.v[ind1:ind2+1].compressed(), [v2]])
+            u = np.concatenate([[u1], prof.u[ind1:ind2+1].ravel(), [u2]])
+            v = np.concatenate([[v1], prof.v[ind1:ind2+1].ravel(), [v2]])
         else:
             ps = np.arange(plower, pupper+dp, dp)
             u, v = interp.components(prof, ps)
@@ -379,8 +377,8 @@ def max_wind(prof, lower, upper, all=False):
         Maximum Wind Speed V-component (kts)
 
     '''
-    if prof.wdir.count() == 0 or not utils.QC(lower) or not utils.QC(upper):
-        return ma.masked, ma.masked, ma.masked
+    if np.isnan(prof.wdir).all() or not utils.QC(lower) or not utils.QC(upper):
+        return np.nan, np.nan, np.nan
 
     lower = interp.to_msl(prof, lower)
     upper = interp.to_msl(prof, upper)
@@ -388,7 +386,7 @@ def max_wind(prof, lower, upper, all=False):
     pupper = interp.pres(prof, upper)
     if np.ma.is_masked(plower) or np.ma.is_masked(pupper):
         warnings.warn("winds.max_wind() was unable to interpolate between height and pressure correctly.  This may be due to a data integrity issue.")
-        return ma.masked, ma.masked, ma.masked
+        return np.nan, np.nan, np.nan
     #print(lower, upper, plower, pupper, prof.pres)
     ind1 = np.where((plower > prof.pres) | (np.isclose(plower, prof.pres)))[0][0]
     ind2 = np.where((pupper < prof.pres) | (np.isclose(pupper, prof.pres)))[0][-1]
@@ -398,8 +396,8 @@ def max_wind(prof, lower, upper, all=False):
         return maxu, maxv, prof.pres[ind1]
 
     arr = prof.wspd[ind1:ind2+1]
-    inds = np.ma.argsort(arr)
-    inds = inds[~arr[inds].mask][::-1]
+    inds = np.argsort(arr)
+    inds = inds[~np.isnan(arr[inds])][::-1]
     maxu, maxv =  utils.vec2comp(prof.wdir[ind1:ind2+1][inds], prof.wspd[ind1:ind2+1][inds])
     if all:
         return maxu, maxv, prof.pres[inds]
@@ -428,8 +426,8 @@ def corfidi_mcs_motion(prof):
         V-component of the downshear vector (kts)
 
     '''
-    if prof.wdir.count() == 0:
-        return ma.masked, ma.masked, ma.masked, ma.masked
+    if np.isnan(prof.wdir).all():
+        return np.nan, np.nan, np.nan, np.nan
     # Compute the tropospheric (850hPa-300hPa) mean wind
     if prof.pres[ prof.sfc ] < 850:
          mnu1, mnv1 = mean_wind_npw(prof, pbot=prof.pres[prof.sfc], ptop=300.)
@@ -495,11 +493,11 @@ def critical_angle(prof, stu=0, stv=0):
         Critical Angle (degrees)
 
     '''
-    if prof.wdir.count() == 0:
-        return ma.masked
+    if np.isnan(prof.wdir).all():
+        return np.nan
 
     if not utils.QC(stu) or not utils.QC(stv):
-        return ma.masked
+        return np.nan
 
     pres_500m = interp.pres(prof, interp.to_msl(prof, 500))
     u500, v500 = interp.components(prof, pres_500m)

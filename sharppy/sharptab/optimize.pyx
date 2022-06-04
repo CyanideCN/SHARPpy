@@ -105,7 +105,7 @@ cdef np.ndarray _vappres_arr(np.ndarray t):
     pres = np.zeros(xshape, dtype=np.float64)
     for x in range(xshape):
         pres[x] = _vappres(t[x])
-    return np.ma.array(pres)
+    return pres
 
 def vappres(t):
     if isinstance(t, np.ndarray):
@@ -128,7 +128,7 @@ cdef np.ndarray _mixratio_arr(np.ndarray p, np.ndarray t):
     mr = np.zeros(xshape, dtype=np.float64)
     for x in range(xshape):
         mr[x] = _mixratio(p[x], t[x])
-    return np.ma.array(mr)
+    return mr
 
 def mixratio(p, t):
     if isinstance(p, np.ndarray) and isinstance(t, np.ndarray):

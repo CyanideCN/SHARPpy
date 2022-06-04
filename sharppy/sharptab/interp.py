@@ -1,8 +1,6 @@
 ''' Interpolation Routines '''
 from __future__ import division
 import numpy as np
-import numpy.ma as ma
-import numpy.testing as npt
 from sharppy.sharptab import utils, thermo
 from sharppy.sharptab.constants import *
 
@@ -51,7 +49,7 @@ def hght(prof, p):
     # routine to be in ascending order. Because pressure decreases in the
     # vertical, we must reverse the order of the two arrays to satisfy
     # this requirement.
-    return generic_interp_pres(ma.log10(p), prof.logp[::-1], prof.hght[::-1])
+    return generic_interp_pres(np.log10(p), prof.logp[::-1], prof.hght[::-1])
 
 def omeg(prof, p):
     '''
@@ -73,7 +71,7 @@ def omeg(prof, p):
     # routine to be in ascending order. Because pressure decreases in the
     # vertical, we must reverse the order of the two arrays to satisfy
     # this requirement.
-    return generic_interp_pres(ma.log10(p), prof.logp[::-1], prof.omeg[::-1])
+    return generic_interp_pres(np.log10(p), prof.logp[::-1], prof.omeg[::-1])
 
 def temp(prof, p):
     '''
@@ -95,7 +93,7 @@ def temp(prof, p):
     # routine to be in ascending order. Because pressure decreases in the
     # vertical, we must reverse the order of the two arrays to satisfy
     # this requirement.
-    return generic_interp_pres(ma.log10(p), prof.logp[::-1], prof.tmpc[::-1])
+    return generic_interp_pres(np.log10(p), prof.logp[::-1], prof.tmpc[::-1])
 
 def thetae(prof, p):
     '''
@@ -117,7 +115,7 @@ def thetae(prof, p):
     # routine to be in ascending order. Because pressure decreases in the
     # vertical, we must reverse the order of the two arrays to satisfy
     # this requirement.
-    return generic_interp_pres(ma.log10(p), prof.logp[::-1], prof.thetae[::-1])
+    return generic_interp_pres(np.log10(p), prof.logp[::-1], prof.thetae[::-1])
 
 def mixratio(prof, p):
     '''
@@ -139,7 +137,7 @@ def mixratio(prof, p):
     # routine to be in ascending order. Because pressure decreases in the
     # vertical, we must reverse the order of the two arrays to satisfy
     # this requirement.
-    return generic_interp_pres(ma.log10(p), prof.logp[::-1], prof.wvmr[::-1])
+    return generic_interp_pres(np.log10(p), prof.logp[::-1], prof.wvmr[::-1])
 
 
 def theta(prof, p):
@@ -162,7 +160,7 @@ def theta(prof, p):
     # routine to be in ascending order. Because pressure decreases in the
     # vertical, we must reverse the order of the two arrays to satisfy
     # this requirement.
-    return generic_interp_pres(ma.log10(p), prof.logp[::-1], prof.theta[::-1])
+    return generic_interp_pres(np.log10(p), prof.logp[::-1], prof.theta[::-1])
 
 def wetbulb(prof, p):
     '''
@@ -184,7 +182,7 @@ def wetbulb(prof, p):
     # routine to be in ascending order. Because pressure decreases in the
     # vertical, we must reverse the order of the two arrays to satisfy
     # this requirement.
-    return generic_interp_pres(ma.log10(p), prof.logp[::-1], prof.wetbulb[::-1])
+    return generic_interp_pres(np.log10(p), prof.logp[::-1], prof.wetbulb[::-1])
 
 def dwpt(prof, p):
     '''
@@ -207,7 +205,7 @@ def dwpt(prof, p):
     # routine to be in ascending order. Because pressure decreases in the
     # vertical, we must reverse the order of the two arrays to satisfy
     # this requirement.
-    return generic_interp_pres(ma.log10(p), prof.logp[::-1], prof.dwpc[::-1])
+    return generic_interp_pres(np.log10(p), prof.logp[::-1], prof.dwpc[::-1])
 
 
 def vtmp(prof, p):
@@ -227,7 +225,7 @@ def vtmp(prof, p):
     Virtual tmperature (C) at the given pressure : number, numpy array
 
     '''
-    return generic_interp_pres(ma.log10(p), prof.logp[::-1], prof.vtmp[::-1])
+    return generic_interp_pres(np.log10(p), prof.logp[::-1], prof.vtmp[::-1])
 
 
 def components(prof, p):
@@ -250,10 +248,10 @@ def components(prof, p):
     # routine to be in ascending order. Because pressure decreases in the
     # vertical, we must reverse the order of the two arrays to satisfy
     # this requirement.
-    if prof.wdir.count() == 0:
-        return ma.masked, ma.masked
-    U = generic_interp_pres(ma.log10(p), prof.logp[::-1], prof.u[::-1])
-    V = generic_interp_pres(ma.log10(p), prof.logp[::-1], prof.v[::-1])
+    if np.isnan(prof.wdir).all():
+        return np.nan, np.nan
+    U = generic_interp_pres(np.log10(p), prof.logp[::-1], prof.u[::-1])
+    V = generic_interp_pres(np.log10(p), prof.logp[::-1], prof.v[::-1])
     return U, V
 
 
@@ -335,35 +333,37 @@ def generic_interp_hght(h, hght, field, log=False):
     Value of the 'field' variable at the given height : number, numpy array
 
     '''
-    if field.count() == 0 or hght.count() == 0:
-        return ma.masked
-    if ma.isMaskedArray(hght):
+    if np.isnan(field).all() or np.isnan(hght).all():
+        return np.nan
+    hght_mask = np.isnan(hght)
+    if hght_mask.any():
         # Multiplying by ones ensures that the result is an array, not a single value ... which 
         # happens sometimes ... >.<
-        not_masked1 = ~hght.mask * np.ones(hght.shape, dtype=bool) 
+        not_masked1 = ~hght_mask * np.ones(hght.shape, dtype=bool) 
     else:
         not_masked1 = np.ones(hght.shape)
-    if ma.isMaskedArray(field):
-        not_masked2 = ~field.mask * np.ones(field.shape, dtype=bool)
+    field_mask = np.isnan(field)
+    if field_mask.any():
+        not_masked2 = ~field_mask * np.ones(field.shape, dtype=bool)
     else:
         not_masked2 = np.ones(field.shape)
-    not_masked = not_masked1 * not_masked2
+    not_masked = (not_masked1 * not_masked2).astype(bool)
 
     field_intrp = np.interp(h, hght[not_masked], field[not_masked],
-                         left=ma.masked, right=ma.masked)
+                         left=np.nan, right=np.nan)
  
     if hasattr(h, 'shape') and h.shape == tuple():
         h = h[()]
 
-    if type(h) != type(ma.masked) and np.all(~np.isnan(h)):
+    if np.all(~np.isnan(h)):
         # Bug fix for Numpy v1.10: returns nan on the boundary.
-        field_intrp = ma.where(np.isclose(h, hght[not_masked][0]), field[not_masked][0], field_intrp)
-        field_intrp = ma.where(np.isclose(h, hght[not_masked][-1]), field[not_masked][-1], field_intrp)
+        field_intrp = np.where(np.isclose(h, hght[not_masked][0]), field[not_masked][0], field_intrp)
+        field_intrp = np.where(np.isclose(h, hght[not_masked][-1]), field[not_masked][-1], field_intrp)
 
-    # Another bug fix: np.interp() returns masked values as nan. We want ma.masked, dangit!
-    field_intrp = ma.where(np.isnan(field_intrp), ma.masked, field_intrp)
+    # Another bug fix: np.interp() returns masked values as nan. We want np.masked, dangit!
+    field_intrp = np.where(np.isnan(field_intrp), np.nan, field_intrp)
 
-    # ma.where() returns a 0-d array when the arguments are floats, which confuses subsequent code.
+    # np.where() returns a 0-d array when the arguments are floats, which confuses subsequent code.
     if hasattr(field_intrp, 'shape') and field_intrp.shape == tuple():
         field_intrp = field_intrp[()]
 
@@ -392,35 +392,37 @@ def generic_interp_pres(p, pres, field):
     Value of the 'field' variable at the given pressure : number, numpy array
 
     '''
-    if field.count() == 0 or pres.count() == 0:
-        return ma.masked
-    if ma.isMaskedArray(pres):
-        not_masked1 = ~pres.mask * np.ones(pres.shape, dtype=bool)
+    if np.isnan(field).all() or np.isnan(pres).all():
+        return np.nan
+    pres_mask = np.isnan(pres)
+    if pres_mask.any():
+        not_masked1 = ~pres_mask * np.ones(pres.shape, dtype=bool)
     else:
         not_masked1 = np.ones(pres.shape, dtype=bool)
         not_masked1[:] = True
-    if ma.isMaskedArray(field):
+    field_mask = np.isnan(field)
+    if field_mask.any():
         not_masked2 = ~field.mask * np.ones(pres.shape, dtype=bool)
     else:
         not_masked2 = np.ones(field.shape, dtype=bool)
         not_masked2[:] = True
     not_masked = not_masked1 * not_masked2
 
-    field_intrp = np.interp(p, pres[not_masked], field[not_masked], left=ma.masked,
-                 right=ma.masked)
+    field_intrp = np.interp(p, pres[not_masked], field[not_masked], left=np.nan,
+                 right=np.nan)
 
     if hasattr(p, 'shape') and p.shape == tuple():
         p = p[()]
 
-    if type(p) != type(ma.masked) and np.all(~np.isnan(p)):
+    if np.all(~np.isnan(p)):
         # Bug fix for Numpy v1.10: returns nan on the boundary.
-        field_intrp = ma.where(np.isclose(p, pres[not_masked][0]), field[not_masked][0], field_intrp)
-        field_intrp = ma.where(np.isclose(p, pres[not_masked][-1]), field[not_masked][-1], field_intrp)
+        field_intrp = np.where(np.isclose(p, pres[not_masked][0]), field[not_masked][0], field_intrp)
+        field_intrp = np.where(np.isclose(p, pres[not_masked][-1]), field[not_masked][-1], field_intrp)
 
-    # Another bug fix: np.interp() returns masked values as nan. We want ma.masked, dangit!
-    field_intrp = ma.where(np.isnan(field_intrp), ma.masked, field_intrp)
+    # Another bug fix: np.interp() returns masked values as nan. We want np.masked, dangit!
+    field_intrp = np.where(np.isnan(field_intrp), np.nan, field_intrp)
 
-    # ma.where() returns a 0-d array when the arguments are floats, which confuses subsequent code.
+    # np.where() returns a 0-d array when the arguments are floats, which confuses subsequent code.
     if hasattr(field_intrp, 'shape') and field_intrp.shape == tuple():
         field_intrp = field_intrp[()]
 

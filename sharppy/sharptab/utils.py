@@ -1,7 +1,6 @@
 ''' Frequently used functions '''
 from __future__ import division
 import numpy as np
-import numpy.ma as ma
 from sharppy.sharptab.constants import MISSING, TOL
 
 __all__ = ['INT2STR','FLOAT2STR','MS2KTS', 'KTS2MS', 'MS2MPH']
@@ -244,8 +243,8 @@ def _vec2comp(wdir, wspd):
         V-component of the wind
 
     '''
-    u = wspd * ma.sin(np.radians(wdir)) * -1
-    v = wspd * ma.cos(np.radians(wdir)) * -1
+    u = wspd * np.sin(np.radians(wdir)) * -1
+    v = wspd * np.cos(np.radians(wdir)) * -1
     return u, v
 
 
@@ -272,32 +271,30 @@ def vec2comp(wdir, wspd, missing=MISSING):
 
     '''
     if not QC(wdir) or not QC(wspd):
-        return ma.masked, ma.masked
+        return np.nan, np.nan
 
-    wdir = ma.asanyarray(wdir).astype(np.float64)
-    wspd = ma.asanyarray(wspd).astype(np.float64)
-    wdir.set_fill_value(missing)
-    wspd.set_fill_value(missing)
+    wdir = np.asanyarray(wdir).astype(np.float64)
+    wspd = np.asanyarray(wspd).astype(np.float64)
     assert wdir.shape == wspd.shape, 'wdir and wspd have different shapes'
     if wdir.shape:
-        wdir[wdir == missing] = ma.masked
-        wspd[wspd == missing] = ma.masked
-        wdir[wspd.mask] = ma.masked
-        wspd[wdir.mask] = ma.masked
+        wdir[wdir == missing] = np.nan
+        wspd[wspd == missing] = np.nan
+        wdir[np.isnan(wspd)] = np.nan
+        wspd[np.isnan(wdir)] = np.nan
         u, v = _vec2comp(wdir, wspd)
         u[np.fabs(u) < TOL] = 0.
         v[np.fabs(v) < TOL] = 0.
     else:
         if wdir == missing:
-            wdir = ma.masked
-            wspd = ma.masked
+            wdir = np.nan
+            wspd = np.nan
         elif wspd == missing:
-            wdir = ma.masked
-            wspd = ma.masked
+            wdir = np.nan
+            wspd = np.nan
         u, v = _vec2comp(wdir, wspd)
-        if ma.fabs(u) < TOL:
+        if np.fabs(u) < TOL:
             u = 0.
-        if ma.fabs(v) < TOL:
+        if np.fabs(v) < TOL:
             v = 0.
     return u, v
 
@@ -325,24 +322,20 @@ def comp2vec(u, v, missing=MISSING):
 
     '''
     if not QC(u) or not QC(v):
-        return ma.masked, ma.masked
+        return np.nan, np.nan
 
-    u = ma.asanyarray(u).astype(np.float64)
-    v = ma.asanyarray(v).astype(np.float64)
-    u.set_fill_value(missing)
-    v.set_fill_value(missing)
     wdir = np.degrees(np.arctan2(-u, -v))
 
     if wdir.shape:
-        u[u == missing] = ma.masked
-        v[v == missing] = ma.masked
-        wdir[u.mask] = ma.masked
-        wdir[v.mask] = ma.masked
+        u[u == missing] = np.nan
+        v[v == missing] = np.nan
+        wdir[np.isnan(u)] = np.nan
+        wdir[np.isnan(v)] = np.nan
         wdir[wdir < 0] += 360
         wdir[np.fabs(wdir) < TOL] = 0.
     else:
         if u == missing or v == missing:
-            return ma.masked, ma.masked
+            return np.nan, np.nan
         if wdir < 0:
             wdir += 360
         if np.fabs(wdir) < TOL:
@@ -371,27 +364,25 @@ def mag(u, v, missing=MISSING):
 
     '''
     if not QC(u) or not QC(v):
-        return ma.masked
+        return np.nan
 
-    u = np.ma.asanyarray(u).astype(np.float64)
-    v = np.ma.asanyarray(v).astype(np.float64)
-    u.set_fill_value(missing)
-    v.set_fill_value(missing)
     if u.shape:
-        u[u == missing] = ma.masked
-        v[v == missing] = ma.masked
+        u[u == missing] = np.nan
+        v[v == missing] = np.nan
     else:
         if u == missing or v == missing:
-            return ma.masked
-    return ma.sqrt(u**2 + v**2)
+            return np.nan
+    return np.sqrt(u**2 + v**2)
 
 def QC(val):
     '''
         Tests if a value is masked.
         
         '''
-    if type(val) == type(ma.masked): return False
-    return True
+    if hasattr(val, '_mask'):
+        if val._mask.all():
+            return False
+    return ~np.isnan(val).all()
 
 def sr_rotate(u, v, r_u, r_v):
     """
