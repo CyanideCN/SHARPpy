@@ -1,8 +1,13 @@
-import os, sys, shutil, glob, getpass, platform
-from setuptools import setup, find_packages
+import os
+import sys
+import shutil
+import glob
+from setuptools import setup
 import versioneer
-pkgname = "SHARPpy"
+from Cython.Build import cythonize
+import numpy as np
 
+pkgname = "SHARPpy"
 
 ### GET VERSION INFORMATION ###
 setup_path = os.path.split(os.path.abspath(__file__))[0]
@@ -84,6 +89,10 @@ elif 'b' in ver:
 else:
     classifiers = ["Development Status :: 5 - Production/Stable"]
 
+pyx_paths = os.path.join('sharppy', 'sharptab', '_opt.pyx')
+
+ext_modules = cythonize(pyx_paths)
+
 setup(
     name = name,
     author = author,
@@ -100,5 +109,7 @@ setup(
     version=ver,
     cmdclass=versioneer.get_cmdclass(),
     install_requires=install_requires,
-    entry_points = entry_pts
+    entry_points = entry_pts,
+    ext_modules=ext_modules,
+    include_dirs=[np.get_include()]
 )

@@ -58,7 +58,7 @@ cdef double _satlift(double p, double thetam, double conv):
         eor = e2 * rate
     return t2 - eor
 
-def satlift(p, thetam, conv=0.1):
+def satlift(p, thetam, conv=0.01):
     if not isinstance(p, np.ndarray) and not isinstance(thetam, np.ndarray):
         return _satlift(p, thetam, conv)
     else:
