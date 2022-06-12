@@ -105,7 +105,7 @@ cdef np.ndarray _vappres_arr(np.ndarray t):
     pres = np.zeros(xshape, dtype=np.float64)
     for x in range(xshape):
         pres[x] = _vappres(t[x])
-    return np.ma.array(pres)
+    return np.ma.masked_invalid(pres)
 
 def vappres(t):
     if isinstance(t, np.ndarray):
@@ -128,10 +128,29 @@ cdef np.ndarray _mixratio_arr(np.ndarray p, np.ndarray t):
     mr = np.zeros(xshape, dtype=np.float64)
     for x in range(xshape):
         mr[x] = _mixratio(p[x], t[x])
-    return np.ma.array(mr)
+    return np.ma.masked_invalid(mr)
 
 def mixratio(p, t):
     if isinstance(p, np.ndarray) and isinstance(t, np.ndarray):
         return _mixratio_arr(p, t)
     else:
         return _mixratio(p, t)
+
+@cython.cdivision(True)
+cdef double _theta(double p, double t, double p2=1000.):
+    return ((t + ZEROCNK) * pow((p2 / p),ROCP)) - ZEROCNK
+
+cdef np.ndarray _theta_arr(np.ndarray p, np.ndarray t, double p2=1000.):
+    cdef np.ndarray theta
+    cdef Py_ssize_t xshape
+    xshape = t.shape[0]
+    theta = np.zeros(xshape, dtype=np.float64)
+    for x in range(xshape):
+        theta[x] = _theta(p[x], t[x], p2)
+    return np.ma.masked_invalid(theta)
+
+def theta(p, t, p2=1000.):
+    if isinstance(p, np.ndarray) and isinstance(t, np.ndarray):
+        return _theta_arr(p, t, p2)
+    else:
+        return _theta(p, t, p2)

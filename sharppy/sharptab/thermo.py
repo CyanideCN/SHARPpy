@@ -4,7 +4,7 @@ import numpy as np
 import numpy.ma as ma
 from sharppy.sharptab.utils import *
 from sharppy.sharptab.constants import *
-from sharppy.sharptab._opt import wobf, satlift, vappres, mixratio
+from sharppy.sharptab._opt import wobf, satlift, vappres, mixratio, theta
 
 __all__ = ['drylift', 'thalvl', 'lcltemp', 'theta', 'wobf']
 __all__ += ['satlift', 'wetlift', 'lifted', 'vappres', 'mixratio']
@@ -85,27 +85,6 @@ def thalvl(theta, t):
     t = t + ZEROCNK
     theta = theta + ZEROCNK
     return 1000. / (np.power((theta / t),(1./ROCP)))
-
-
-def theta(p, t, p2=1000.):
-    '''
-    Returns the potential temperature (C) of a parcel.
-
-    Parameters
-    ----------
-    p : number, numpy array
-        The pressure of the parcel (hPa)
-    t : number, numpy array
-        Temperature of the parcel (C)
-    p2 : number, numpy array (default 1000.)
-        Reference pressure level (hPa)
-
-    Returns
-    -------
-    Potential temperature (C)
-
-    '''
-    return ((t + ZEROCNK) * np.power((p2 / p),ROCP)) - ZEROCNK
 
 
 def thetaw(p, t, td):
@@ -241,10 +220,10 @@ def wetlift(p, t, p2):
     Temperature (C)
 
     '''
-    #if p == p2:
-    #    return t
+    if p is np.ma.masked or t is np.ma.masked or p2 is np.ma.masked:
+        return np.ma.masked
     thta = theta(p, t, 1000.)
-    if thta is np.ma.masked or p2 is np.ma.masked:
+    if thta is np.ma.masked:
         return np.ma.masked
     thetam = thta - wobf(thta) + wobf(t)
     return satlift(p2, thetam)

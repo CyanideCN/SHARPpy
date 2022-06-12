@@ -1256,7 +1256,14 @@ def mean_theta(prof, pbot=None, ptop=None, dp=-1, exact=False):
         theta2 = thermo.theta(ptop, interp.temp(prof, ptop))
         theta = thermo.theta(prof.pres[ind1:ind2+1],  prof.tmpc[ind1:ind2+1])
         mask = ~theta.mask
-        theta = np.concatenate([[theta1], theta[mask], theta[mask], [theta2]])
+        if mask.size == 1:
+            if mask:
+                theta_masked = theta
+            else:
+                theta_masked = ma.zeros(theta.shape)
+        else:
+            theta_masked = theta[mask]
+        theta = np.concatenate([[theta1], theta_masked, theta_masked, [theta2]])
         tott = theta.sum() / 2.
         num = float(len(theta)) / 2.
         thta = tott / num

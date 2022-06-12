@@ -107,7 +107,7 @@ class SkewXAxis(maxis.XAxis):
     """
 
     def _get_tick(self, major):
-        return SkewXTick(self.axes, None, '', major=major)
+        return SkewXTick(self.axes, '', major=major)
 
     def get_view_interval(self):
         """Get the view interval."""

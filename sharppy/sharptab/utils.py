@@ -387,9 +387,9 @@ def mag(u, v, missing=MISSING):
 
 def QC(val):
     '''
-        Tests if a value is masked.
-        
-        '''
+    Tests if a value is masked.
+    
+    '''
     if type(val) == type(ma.masked): return False
     return True
 
